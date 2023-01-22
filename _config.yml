@@ -25,8 +25,6 @@ tagline: ""
 description: 记录个人工作学习信息
 baseurl: ""
 url: "https://gezihuzi.github.io"
-author: gezihuzi
-repository: "gezihuzi/gezihuzi.github.io"
 
 # Settings for Jekyll Compose
 jekyll_compose:
@@ -43,12 +41,8 @@ jekyll_compose:
       tags:
 
 # Build settings
-search: true
-locale: zh-CN
 theme: jekyll-theme-tao
 remote_theme: vfvong/jekyll-theme-tao
-atom_feed:
-  hide: false
 plugins:
   - jekyll-feed
   - jekyll-timeago
@@ -60,16 +54,6 @@ tags_path: /tags/
 # The following items will not be processed, by default.
 # Any item listed under the `exclude:` key here will be automatically added to
 # the internal "default list".
-
-defaults:
-  # _posts
-  - scope:
-      path: ""
-      type: posts
-    values:
-      show_date: true
-      read_time: true
-      comments: false
 
 # Excluded items can be processed by explicitly listing the directories or
 # their entries' file path in the `include:` list.
