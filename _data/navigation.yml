@@ -1,0 +1,5 @@
+main:
+  - title: "文章"
+    url: /
+  - title: "关于"
+    url: /about
