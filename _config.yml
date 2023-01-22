@@ -18,27 +18,43 @@
 # You can create any custom variable you would like, and they will be accessible
 # in the templates via {{ site.myvariable }}.
 
-title: 鸽子胡子博客
+title: 鸽子胡子
 email: hypobenthos#outlook.com
 name: gezihuzi
-description: >- # this means to ignore newlines until "baseurl:"
-  一名开发者, 这个博客主要给工作和学习做一些记录。
-baseurl: "" # the subpath of your site, e.g. /blog
-url: "https://gezihuzi.github.io" # the base hostname & protocol for your site, e.g. http://example.com
-twitter_username: gezihuzi
-github_username: gezihuzi
+tagline: ""
+description: 记录个人工作学习信息
+baseurl: ""
+url: "https://gezihuzi.github.io"
 author: gezihuzi
 repository: "gezihuzi/gezihuzi.github.io"
+
+# Settings for Jekyll Compose
+jekyll_compose:
+  default_front_matter:
+    drafts:
+      layout:
+      title:
+      date:
+      tags:
+    posts:
+      layout:
+      title:
+      date:
+      tags:
 
 # Build settings
 search: true
 locale: zh-CN
-theme: minimal-mistakes-jekyll
-minimal_mistakes_skin: "default"
+theme: jekyll-theme-tao
+remote_theme: vfvong/jekyll-theme-tao
 atom_feed:
   hide: false
 plugins:
   - jekyll-feed
+  - jekyll-timeago
+
+categories_path: /categories/
+tags_path: /tags/
 
 # Exclude from processing.
 # The following items will not be processed, by default.

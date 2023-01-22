@@ -1,5 +1,5 @@
 ---
-layout: posts
+layout: post
 title:  "使用jekyll 安装和部署博客"
 date:   2023-01-09 21:00:00 +0800
 ---
