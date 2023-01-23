@@ -5,7 +5,7 @@ date:   2023-01-23 13:00:00 +0800
 ---
 最近为我的15 款的Mac 更换新的固态硬盘。需要备份系统以便更换完直接恢复。
 
-制作U盘启动工具执行一些恢复操作, 所以需要下载完整的`macOS` 系统镜像。但是`App Store` 的下载速度过慢且十分的不稳定, 这里我们将使用`macOS` 自带的终端、浏览器和第三方下载工具下载完整的`macOS` 系统镜像
+需要下载完整的`macOS` 系统镜像制作可引导的`macOS` 安装器。但是`App Store` 的下载速度过慢且十分的不稳定, 这里我们将使用`macOS` 自带的终端获取完整的`macOS` 系统镜像下载链接。
 
 > macOS 12.6.2
 > 终端 2.12.7
@@ -25,7 +25,7 @@ tail -f /var/log/install.log | grep .pkg
 
 这里以`macOS Monterey`为例, 在`App Store` 中搜索下载或者 直接[下载macOS Monterey](https://apps.apple.com/cn/app/macos-monterey/id1576738294)进入并下载安装你需要下载的系统镜像。
 
-> 如果你无法通过`App Store` 的内置搜索到你想要下载的系统, 你可以直接通过搜索引擎, 并加上关键字, 如: `macOS Monterey App Store`, 则可以直接获取对应系统的`App Store` 的链接。
+> 苹果官方的[如何下载 macOS](https://support.apple.com/zh-cn/HT211683)中提供了各个系统版本的App Store 链接
 
 ![macOS Monterey](/assets/img/macos-monterey.png)
 
