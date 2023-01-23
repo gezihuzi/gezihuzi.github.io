@@ -7,7 +7,8 @@ date:   2023-01-09 21:00:00 +0800
 
 ## 环境准备
 
-> 操作环境 macOS 12.6.2
+> macOS 12.6.2
+> ruby 3.2.0
 
 安装jekyll 和相关的依赖需要使用`ruby`, `macOS` 系统自带的`ruby` 版本过低且使用非`root` 用户`gem` 无法安装第三方的依赖。使用[rbenv](https://github.com/rbenv/rbenv) 来安装和管理`ruby` 环境。
 
