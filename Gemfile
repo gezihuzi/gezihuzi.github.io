@@ -14,11 +14,11 @@ gem "jekyll"
 # gem "github-pages", group: :jekyll_plugins
 # If you have any plugins, put them here!
 group :jekyll_plugins do
-  gem 'jekyll-feed', '~> 0.12'
+  gem 'jekyll-feed'
   gem 'jekyll-sitemap'
-  gem 'jekyll-timeago', '~> 0.13.1'
+  gem 'jekyll-timeago'
   gem 'jekyll-compose'
-  gem 'webrick', '~> 1.7'
+  gem 'webrick'
 end
 
 # Theme
