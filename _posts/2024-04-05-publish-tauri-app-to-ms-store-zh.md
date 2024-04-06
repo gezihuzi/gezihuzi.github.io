@@ -18,7 +18,7 @@ yarn tauri build
 
 在打包完成后, 你会在`/target/release/bundle` 目录下找到打包好的应用程序。我们使用`*.msi` 进行接下来的步骤。
 
-## 转换格式
+## 转换安装程序格式
 
 我们使用微软提供的官方工具, 将已有的`*.msi` 安装程序转换成`*.msix` 格式, 以便发布到Microsoft Store。这是一个必须的步骤, 因为Microsoft Store 只接受`*.msix` 格式的应用程序。官方文档可以在[这里](https://learn.microsoft.com/en-us/windows/MSIX/packaging-tool/create-an-MSIX-overview) 找到。
 
@@ -26,7 +26,7 @@ yarn tauri build
 
 转换应用格式之前, 你需要先下载和安装`MSIX Packaging Tool`, 你可以在[Microsoft Store](https://www.microsoft.com/p/MSIX-packaging-tool/9n5lw3jbcxkf) 下载`MSIX Packaging Tool`。相关说明文档: [MSIX Packaging Tool](https://learn.microsoft.com/en-us/windows/MSIX/packaging-tool/tool-overview)。
 
-### 转换应用程序
+### 转换安装程序
 
 打开`MSIX Packaging Tool`, 点击**应用程序包-创建你的应用包**。
 
@@ -64,11 +64,11 @@ yarn tauri build
 
 后续的步骤按照提示进行操作, 最后点击**创建**。应用会自动安装至当前计算机, 按照操作提示进行安装, 重启后, 应用会自动打开, 打包完成会生成一个报告和`*.msix`文件。将此文件提交至Microsoft Store 进行审核即可。
 
-## 签名选择
+## 应用签名
 
 ![Step-7](/assets/img/publish-tauri-app-to-ms-store-step7.png)
 
-据我所知, 目前在Microsoft Store中创建产品有两种选择:
+上述的步骤中, 我们选择了不对程序包进行签名, 目前在Microsoft Store中创建产品有两种选择:
 
 1. `MSIX` 或`PWA`, `MSIX` 支持上传无需签名的软件包, 因为Microsoft Store 会自动对其进行签名。
 2. `EXE` 或`MSIX` 则需要单独购买证书以进行签名。
