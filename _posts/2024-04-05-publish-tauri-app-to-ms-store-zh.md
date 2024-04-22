@@ -64,7 +64,7 @@ yarn tauri build
 
 后续的步骤按照提示进行操作, 最后点击**创建**。应用会自动安装至当前计算机, 按照操作提示进行安装, 重启后, 应用会自动打开, 打包完成会生成一个报告和`*.msix`文件。将此文件提交至Microsoft Store 进行审核即可。
 
-## 应用签名
+## 签名应用包
 
 ![Step-7](/assets/img/publish-tauri-app-to-ms-store-step7.png)
 

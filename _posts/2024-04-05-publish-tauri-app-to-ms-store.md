@@ -28,25 +28,25 @@ Before converting the application format, you need to download and install the `
 
 ### Convert installer
 
-Open the `MSIX Packaging Tool`, click on **Package Editor - Create your package**.
+Open the `MSIX Packaging Tool`, click on **Application package - Create your package**.
 
-![Step 1](/assets/img/publish-tauri-app-to-ms-store-step1.png)
+![Step 1](/assets/img/publish-tauri-app-to-ms-store-step1-en.png)
 
-Select the environment in which you want to package, I am running on a local computer, so choose to **create the program package on this computer**.
+Select the environment in which you want to package, I am running on a local computer, so choose to **Create package on this computer**.
 
-![Step 2](/assets//img/publish-tauri-app-to-ms-store-step2.png)
+![Step 2](/assets//img/publish-tauri-app-to-ms-store-step2-en.png)
 
 Select your application installer, click **Next**.
 
-![Step 3](/assets/img/publish-tauri-app-to-ms-store-step3.png)
+![Step 3](/assets/img/publish-tauri-app-to-ms-store-step3-en.png)
 
 Confirm the need to install the 'MSIX Packaging Tool Driver', click **Next**.
 
-![Step 4](/assets/img/publish-tauri-app-to-ms-store-step4.png)
+![Step 4](/assets/img/publish-tauri-app-to-ms-store-step4-en.png)
 
 Select the just packaged `*.msi` application installer, fill in the installation program parameters according to the actual situation, select **Do not sign the package** as the signing preference option, and then click **Next**.
 
-![Step 5-1](/assets/img/publish-tauri-app-to-ms-store-step5-1.png)
+![Step 5-1](/assets/img/publish-tauri-app-to-ms-store-step5-1-en.png)
 
 You can obtain this information through Microsoft Partner Center - Apps and Games - Applications - Product Management - Identity.
 
@@ -54,19 +54,19 @@ You can obtain this information through Microsoft Partner Center - Apps and Game
 - Package/Identity/Publisher
 - Package/Properties/PublisherDisplayName
 
-![Step 5-2](/assets/img/publish-tauri-app-to-ms-store-step5-2.png)
+![Step 5-2](/assets/img/publish-tauri-app-to-ms-store-step5-2-en.png)
 
 After obtaining it, follow the instructions to fill in the program package information. Please fill in this information correctly, otherwise an error will be prompted when uploading to the Microsoft Store, then click **Next**.
 
-![Step 6](/assets/img/publish-tauri-app-to-ms-store-step6.png)
+![Step 6](/assets/img/publish-tauri-app-to-ms-store-step6-en.png)
 
 If there is no accelerator, please click **Next** directly.
 
 Follow the prompts for the subsequent steps, and finally click **Create**. The application will be automatically installed on the current computer. Follow the installation instructions, and after restarting, the application will open automatically. Once packaging is complete, a report and `*.msix` file will be generated. Submit this file to Microsoft Store for review.
 
-## Application signature
+## Sign package
 
-![Step-7](/assets/img/publish-tauri-app-to-ms-store-step7.png)
+![Step-7](/assets/img/publish-tauri-app-to-ms-store-step7-en.png)
 
 In the above steps, we chose not to sign the program package. there are currently two options for creating products in the Microsoft Store:
 
