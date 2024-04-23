@@ -6,6 +6,17 @@ date:   2024-04-05 21:00:00 +0800
 
 Recently, the app developed using the Tauri framework has been completed and needs to be published to the Microsoft Store, so I am writing this article to document the process of my publication and the issues encountered.
 
+## Should I sign the package or not?
+
+![Step-7](/assets/img/publish-tauri-app-to-ms-store-step7-en.png)
+
+There are currently two options for creating products in the Microsoft Store:
+
+1. `MSIX` or `PWA`. `MSIX` supports uploading software packages without requiring signing, as Microsoft Store will automatically sign them.
+2. For `EXE` or `MSIX`, a separate certificate purchase is required for signing.
+
+If you are only publishing to the Microsoft Store, you can choose the first option and submit an unsigned software package created using the `MSIX` packaging tool.
+
 ## Package the application
 
 First, we need to package our application using the packaging tool provided by `Tauri`. You can find a tutorial on how to package in the [Tauri official documentation - Application Publishing](https://tauri.app/v1/guides/distribution/publishing/).
@@ -63,14 +74,3 @@ After obtaining it, follow the instructions to fill in the program package infor
 If there is no accelerator, please click **Next** directly.
 
 Follow the prompts for the subsequent steps, and finally click **Create**. The application will be automatically installed on the current computer. Follow the installation instructions, and after restarting, the application will open automatically. Once packaging is complete, a report and `*.msix` file will be generated. Submit this file to Microsoft Store for review.
-
-## Sign package
-
-![Step-7](/assets/img/publish-tauri-app-to-ms-store-step7-en.png)
-
-In the above steps, we chose not to sign the program package. there are currently two options for creating products in the Microsoft Store:
-
-1. `MSIX` or `PWA`. `MSIX` supports uploading software packages without requiring signing, as Microsoft Store will automatically sign them.
-2. For `EXE` or `MSIX`, a separate certificate purchase is required for signing.
-
-If you are only publishing to the Microsoft Store, you can choose the first option and submit an unsigned software package created using the `MSIX` packaging tool.

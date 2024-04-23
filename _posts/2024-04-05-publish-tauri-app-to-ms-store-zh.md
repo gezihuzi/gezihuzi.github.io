@@ -6,6 +6,17 @@ date:   2024-04-05 21:00:00 +0800
 
 最近使用Tauri 框架开发的App 已经开发完成, 需要发布到Microsoft Store, 所以写下这篇文章记录我发布的过程和遇到的问题。
 
+## 签名或者不签名?
+
+![Step-7](/assets/img/publish-tauri-app-to-ms-store-step7.png)
+
+目前在Microsoft Store中创建产品有两种选择:
+
+1. `MSIX` 或`PWA`, `MSIX` 支持上传无需签名的软件包, 因为Microsoft Store 会自动对其进行签名。
+2. `EXE` 或`MSIX` 则需要单独购买证书以进行签名。
+
+如果您只是发布到Microsoft Store, 您可以选择第一种选项, 并提交使用`MSIX` 打包工具创建的未签名软件包。如果您需要在其他地方发布, 则需要购买证书以进行签名。
+
 ## 打包应用程序
 
 首先, 我们需要打包我们的应用程序, 使用`Tauri` 提供的打包工具, 你可以在[Tauri 官方文档-应用发布](https://tauri.app/v1/guides/distribution/publishing/) 找到如何打包的教程。
@@ -63,14 +74,3 @@ yarn tauri build
 如没有加速器, 请直接点击**下一步**。
 
 后续的步骤按照提示进行操作, 最后点击**创建**。应用会自动安装至当前计算机, 按照操作提示进行安装, 重启后, 应用会自动打开, 打包完成会生成一个报告和`*.msix`文件。将此文件提交至Microsoft Store 进行审核即可。
-
-## 签名应用包
-
-![Step-7](/assets/img/publish-tauri-app-to-ms-store-step7.png)
-
-上述的步骤中, 我们选择了不对程序包进行签名, 目前在Microsoft Store中创建产品有两种选择:
-
-1. `MSIX` 或`PWA`, `MSIX` 支持上传无需签名的软件包, 因为Microsoft Store 会自动对其进行签名。
-2. `EXE` 或`MSIX` 则需要单独购买证书以进行签名。
-
-如果您只是发布到Microsoft Store, 您可以选择第一种选项, 并提交使用`MSIX` 打包工具创建的未签名软件包。
