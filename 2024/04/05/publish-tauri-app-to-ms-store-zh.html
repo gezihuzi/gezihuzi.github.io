@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<link rel="stylesheet" href="/assets/css/normalize.css"/>
+	<link rel="stylesheet" href="/assets/css/open-color.css"/>
+	<link rel="stylesheet" href="/assets/css/tao/styles.css"/>
+
+  <script async src="https://use.fontawesome.com/releases/v6.0.0/js/all.js"></script>
+
+  
+
+</head>
+
+  <body>
+    <div class="wrapper">
+      <header class="masthead">
+  <h2 class="masthead-title">
+    <a href="/">鸽子胡子</a>
+  </h2>
+  
+    <h5 class="masthead-tagline"></h5>
+  
+  
+    <nav class="nav">
+      
+        <a class="nav-item " href="/">
+          Home
+        </a>
+      
+        <a class="nav-item " href="/about">
+          About
+        </a>
+      
+        <a class="nav-item " href="/archive">
+          Archive
+        </a>
+      
+      </nav>
+  
+</header>
+
+      <main>
+        <article class="post">
+  <div class="post-meta post-meta-top">
+    <div>
+      <time datetime="2024-04-05T13:00:00+00:00">
+        <i class="fa-solid fa-calendar-days"></i> 05 Apr 2024
+      </time></div>
+    
+    
+  </div>
+
+  <h1 class="post-title">将 Tauri 应用发布到 Microsoft Store</h1>
+  
+
+  
+
+  <span class="post-metadata"> Published 5 months and 3 weeks ago. </span> 
+
+  <span class="post-metadata" title="Estimated read time">
+  Reading time: 
+  
+  
+    1 min
+  
+</span>
+
+
+
+  <div class="post-content">
+    <p>最近使用Tauri 框架开发的App 已经开发完成, 需要发布到Microsoft Store, 所以写下这篇文章记录我发布的过程和遇到的问题。</p>
+
+<h2 id="签名或者不签名">签名或者不签名?</h2>
+
+<p><img src="/assets/img/publish-tauri-app-to-ms-store-step7.png" alt="Step-7" /></p>
+
+<p>目前在Microsoft Store中创建产品有两种选择:</p>
+
+<ol>
+  <li><code class="language-plaintext highlighter-rouge">MSIX</code> 或<code class="language-plaintext highlighter-rouge">PWA</code>, <code class="language-plaintext highlighter-rouge">MSIX</code> 支持上传无需签名的软件包, 因为Microsoft Store 会自动对其进行签名。</li>
+  <li><code class="language-plaintext highlighter-rouge">EXE</code> 或<code class="language-plaintext highlighter-rouge">MSIX</code> 则需要单独购买证书以进行签名。</li>
+</ol>
+
+<p>如果您只是发布到Microsoft Store, 您可以选择第一种选项, 并提交使用<code class="language-plaintext highlighter-rouge">MSIX</code> 打包工具创建的未签名软件包。如果您需要在其他地方发布, 则需要购买证书以进行签名。</p>
+
+<h2 id="打包应用程序">打包应用程序</h2>
+
+<p>首先, 我们需要打包我们的应用程序, 使用<code class="language-plaintext highlighter-rouge">Tauri</code> 提供的打包工具, 你可以在<a href="https://tauri.app/v1/guides/distribution/publishing/">Tauri 官方文档-应用发布</a> 找到如何打包的教程。</p>
+
+<p>以下是我使用的命令:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>yarn tauri build
+</code></pre></div></div>
+
+<p>在打包完成后, 你会在<code class="language-plaintext highlighter-rouge">/target/release/bundle</code> 目录下找到打包好的应用程序。我们使用<code class="language-plaintext highlighter-rouge">*.msi</code> 进行接下来的步骤。</p>
+
+<h2 id="转换安装程序格式">转换安装程序格式</h2>
+
+<p>我们使用微软提供的官方工具, 将已有的<code class="language-plaintext highlighter-rouge">*.msi</code> 安装程序转换成<code class="language-plaintext highlighter-rouge">*.msix</code> 格式, 以便发布到Microsoft Store。这是一个必须的步骤, 因为Microsoft Store 只接受<code class="language-plaintext highlighter-rouge">*.msix</code> 格式的应用程序。官方文档可以在<a href="https://learn.microsoft.com/en-us/windows/MSIX/packaging-tool/create-an-MSIX-overview">这里</a> 找到。</p>
+
+<h3 id="下载工具">下载工具</h3>
+
+<p>转换应用格式之前, 你需要先下载和安装<code class="language-plaintext highlighter-rouge">MSIX Packaging Tool</code>, 你可以在<a href="https://www.microsoft.com/p/MSIX-packaging-tool/9n5lw3jbcxkf">Microsoft Store</a> 下载<code class="language-plaintext highlighter-rouge">MSIX Packaging Tool</code>。相关说明文档: <a href="https://learn.microsoft.com/en-us/windows/MSIX/packaging-tool/tool-overview">MSIX Packaging Tool</a>。</p>
+
+<h3 id="转换安装程序">转换安装程序</h3>
+
+<p>打开<code class="language-plaintext highlighter-rouge">MSIX Packaging Tool</code>, 点击<strong>应用程序包-创建你的应用包</strong>。</p>
+
+<p><img src="/assets/img/publish-tauri-app-to-ms-store-step1.png" alt="Step 1" /></p>
+
+<p>选择想要在其中进行打包的环境, 我在本地计算机中运行, 所以选择在<strong>此计算机中创建程序包</strong>。</p>
+
+<p><img src="/assets//img/publish-tauri-app-to-ms-store-step2.png" alt="Step 2" /></p>
+
+<p>选择你的应用程序安装程序, 点击<strong>下一步</strong>。</p>
+
+<p><img src="/assets/img/publish-tauri-app-to-ms-store-step3.png" alt="Step 3" /></p>
+
+<p>确认需要安装的<code class="language-plaintext highlighter-rouge">MSIX 打包工具驱动程序</code>, 点击<strong>下一步</strong>。</p>
+
+<p><img src="/assets/img/publish-tauri-app-to-ms-store-step4.png" alt="Step 4" /></p>
+
+<p>选择刚刚打包好的<code class="language-plaintext highlighter-rouge">*.msi</code>应用安装程序, 安装程序参数根据实际情况进行填写, 签名首选项选择<strong>不对程序包进行签名</strong>, 然后点击<strong>下一步</strong>。</p>
+
+<p><img src="/assets/img/publish-tauri-app-to-ms-store-step5-1.png" alt="Step 5-1" /></p>
+
+<p>你可以通过Microsoft 合作伙伴中心-应用和游戏-应用程序-产品管理-产品标识中获取到这些信息。</p>
+
+<ul>
+  <li>包/标识/名称</li>
+  <li>包/标识/发行商</li>
+  <li>包/属性/发布者显示名称</li>
+</ul>
+
+<p><img src="/assets/img/publish-tauri-app-to-ms-store-step5-2.png" alt="Step 5-2" /></p>
+
+<p>获取之后按照说明, 填入程序包信息, 请正确填写这些信息, 否则微软商店上传时会提示错误, 然后点击<strong>下一步</strong>。</p>
+
+<p><img src="/assets/img/publish-tauri-app-to-ms-store-step6.png" alt="Step 6" /></p>
+
+<p>如没有加速器, 请直接点击<strong>下一步</strong>。</p>
+
+<p>后续的步骤按照提示进行操作, 最后点击<strong>创建</strong>。应用会自动安装至当前计算机, 按照操作提示进行安装, 重启后, 应用会自动打开, 打包完成会生成一个报告和<code class="language-plaintext highlighter-rouge">*.msix</code>文件。将此文件提交至Microsoft Store 进行审核即可。</p>
+
+  </div>
+
+  
+</article>
+
+<div class="pagination">
+  
+    <a class="prev post-prev" href="/2023/02/17/apple-tv-setup-proxy.html">
+      <i class="fas fa-chevron-left"></i> <span class="">Apple TV 设置代理
+</span>
+    </a>
+  
+  
+  
+    <a class="next post-next" href="/2024/04/05/publish-tauri-app-to-ms-store.html">
+      <span class="">Publish Tauri app to Microsoft Store
+</span> <i class="fas fa-chevron-right"></i> 
+    </a>
+  
+</div>
+
+
+      </main>
+      <footer class="footer">
+  
+  <div class="social">
+    
+      <a href="mailto:hypobenthos@outlook.com" target="_blank">
+        <i class="fas fa-envelope" title="Email"></i>
+      </a>
+    
+      <a href="https://github.com/gezihuzi" target="_blank">
+        <i class="fab fa-github" title="GitHub"></i>
+      </a>
+    
+  </div>
+  
+  
+  <div class="columns">
+    <p class="column">
+      &copy; <time datetime="2024-09-23T08:39:56+00:00">2024</time>. All rights reserved.
+    </p>
+
+    <p class="column">
+      Powered by <a href="https://jekyllrb.com/" target="_blank">Jekyll</a> & <a href="https://github.com/vfvong/jekyll-theme-tao" target="_blank">Tao</a>
+    </p>
+
+    
+    <p class="column">
+      记录个人工作学习信息
+    </p>
+    
+  </div>
+</footer>
+  
+    </div>
+
+    
+
+    
+  </body>
+</html>

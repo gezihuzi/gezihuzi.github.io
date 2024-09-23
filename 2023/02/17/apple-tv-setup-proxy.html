@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<link rel="stylesheet" href="/assets/css/normalize.css"/>
+	<link rel="stylesheet" href="/assets/css/open-color.css"/>
+	<link rel="stylesheet" href="/assets/css/tao/styles.css"/>
+
+  <script async src="https://use.fontawesome.com/releases/v6.0.0/js/all.js"></script>
+
+  
+
+</head>
+
+  <body>
+    <div class="wrapper">
+      <header class="masthead">
+  <h2 class="masthead-title">
+    <a href="/">鸽子胡子</a>
+  </h2>
+  
+    <h5 class="masthead-tagline"></h5>
+  
+  
+    <nav class="nav">
+      
+        <a class="nav-item " href="/">
+          Home
+        </a>
+      
+        <a class="nav-item " href="/about">
+          About
+        </a>
+      
+        <a class="nav-item " href="/archive">
+          Archive
+        </a>
+      
+      </nav>
+  
+</header>
+
+      <main>
+        <article class="post">
+  <div class="post-meta post-meta-top">
+    <div>
+      <time datetime="2023-02-17T13:00:00+00:00">
+        <i class="fa-solid fa-calendar-days"></i> 17 Feb 2023
+      </time></div>
+    
+    
+  </div>
+
+  <h1 class="post-title">Apple TV 设置代理</h1>
+  
+
+  
+
+  <span class="post-metadata"> Published 1 year and 7 months ago. </span> 
+
+  <span class="post-metadata" title="Estimated read time">
+  Reading time: 
+  
+  
+    1 min
+  
+</span>
+
+
+
+  <div class="post-content">
+    <p>最近新购入Apple TV, 需要配置代理服务使用Netflix 和Youtube 服务, 所以写下这篇文章记录我配置代理的过程和遇到的问题。</p>
+
+<p>Apple TV 的网络设置中, 是无法直接设置代理服务器的, 我们需要通过Mac 版本的Apple Configurator 软件来设置。</p>
+
+<p>我这边使用使用Surge 作为代理软件, iPad 作为我的代理服务器。Surge 可以替换成任意的主流代理软件, 例如ClashX, 代理软件需要开启局域网代理服务。并使用Apple Configurator 来创建和分享代理配置至Apple TV。</p>
+
+<blockquote>
+  <p>macOS 12.6.2
+Surge v5.3.0
+Apple Configurator v2.16</p>
+</blockquote>
+
+<h2 id="开启并查看代理配置">开启并查看代理配置</h2>
+
+<p><img src="/assets/img/apple-tv-surge-settings.png" alt="Surge settings" /></p>
+
+<p>如图所示, 当前本地服务的代理服务地址和端口信息, 记录以下信息, 配置时会使用到。</p>
+
+<p>代理地址: <code class="language-plaintext highlighter-rouge">192.168.31.114</code>
+代理端口: <code class="language-plaintext highlighter-rouge">6152</code></p>
+
+<p>每个代理软件的配置会有所区别, 请查看相关软件的配置, 并确保代理软件开启<code class="language-plaintext highlighter-rouge">局域网代理</code> 服务。</p>
+
+<h2 id="创建wifi-和代理配置">创建WiFi 和代理配置</h2>
+
+<p>打开Apple Configurator, 在菜单栏中打开文件-新建描述文件。</p>
+
+<p><img src="/assets/img/apple-tv-profile-step0.png" alt="New profile" /></p>
+
+<ol>
+  <li>键入配置文件名称, 建议选择简单易懂的名称，例如<code class="language-plaintext highlighter-rouge">WiFi-Proxy</code>, 这将展示在Apple TV 中。</li>
+  <li>选择侧边导航<code class="language-plaintext highlighter-rouge">WiFi</code> 栏并添加配置信息。</li>
+</ol>
+
+<p><img src="/assets/img/apple-tv-profile-step1.png" alt="Step 1" /></p>
+
+<p>点击配置开始</p>
+
+<p><img src="/assets/img/apple-tv-profile-step2.png" alt="Step 2" /></p>
+
+<p>以下是示例信息, 请根据实机的情况进行配置。</p>
+
+<ol>
+  <li>Wi-Fi SSID: <code class="language-plaintext highlighter-rouge">HUAWEI-G5WW3D_HiLink</code></li>
+  <li>代理设置: <code class="language-plaintext highlighter-rouge">手动</code></li>
+  <li>代理服务器和端口: <code class="language-plaintext highlighter-rouge">192.168.31.114</code> 和<code class="language-plaintext highlighter-rouge">6152</code></li>
+  <li>安全性类型: <code class="language-plaintext highlighter-rouge">WPA/WPA2 个人级</code></li>
+  <li>密码: <code class="language-plaintext highlighter-rouge">password1234</code></li>
+</ol>
+
+<p><img src="/assets/img/apple-tv-profile-step3.png" alt="Step 3" /></p>
+
+<p>打开菜单栏, 文件-存储, 来保存当前的配置文件。</p>
+
+<p><img src="/assets/img/apple-tv-profile-step4.png" alt="Step 4" /></p>
+
+<h2 id="连接apple-tv">连接Apple TV</h2>
+
+<p>请确保当前设备在同一个网络中, 我使用的是带网口的版本,可以直接连接网线。如果你是无网口的版本, 建议使用非上面配置中的已使用的Wi-Fi进行。也可以使用手机热点或者其他的Wi-Fi。</p>
+
+<p>进入Apple TV, 打开设置-遥控器与设备-“遥控器”App与设备。停留在此页面并等待配对连接。</p>
+
+<p>回到Apple Configurator, 打开菜单栏-配对的设备…</p>
+
+<p><img src="/assets/img/apple-tv-profile-step5.png" alt="Step 5" /></p>
+
+<p>选择附近的Apple TV 进行配对连接</p>
+
+<p><img src="/assets/img/apple-tv-profile-step6.png" alt="Step 6" /></p>
+
+<p>输入Apple TV 上的认证码进行连接</p>
+
+<p><img src="/assets/img/apple-tv-profile-step7.png" alt="Step 7" /></p>
+
+<p>配对连接成功</p>
+
+<p><img src="/assets/img/apple-tv-profile-step8.png" alt="Step 8" /></p>
+
+<p>关闭此窗口并回到首页</p>
+
+<p><img src="/assets/img/apple-tv-profile-step9.png" alt="Step 9" /></p>
+
+<p>点击首页的设备进入配置, 选择侧边栏-描述文件, 并拖入刚才保存的配置文件</p>
+
+<p><img src="/assets/img/apple-tv-profile-step10.png" alt="Step 10" /></p>
+
+<p>传输配置文件后并在TV 端安装配置文件后重启TV 即可, TV 会自动连接刚才配置的Wi-Fi 和代理。</p>
+
+  </div>
+
+  
+</article>
+
+<div class="pagination">
+  
+    <a class="prev post-prev" href="/2023/01/23/download-macos-image.html">
+      <i class="fas fa-chevron-left"></i> <span class="">下载完整的macOS 系统镜像
+</span>
+    </a>
+  
+  
+  
+    <a class="next post-next" href="/2024/04/05/publish-tauri-app-to-ms-store-zh.html">
+      <span class="">将 Tauri 应用发布到 Microsoft Store
+</span> <i class="fas fa-chevron-right"></i> 
+    </a>
+  
+</div>
+
+
+      </main>
+      <footer class="footer">
+  
+  <div class="social">
+    
+      <a href="mailto:hypobenthos@outlook.com" target="_blank">
+        <i class="fas fa-envelope" title="Email"></i>
+      </a>
+    
+      <a href="https://github.com/gezihuzi" target="_blank">
+        <i class="fab fa-github" title="GitHub"></i>
+      </a>
+    
+  </div>
+  
+  
+  <div class="columns">
+    <p class="column">
+      &copy; <time datetime="2024-09-23T08:39:56+00:00">2024</time>. All rights reserved.
+    </p>
+
+    <p class="column">
+      Powered by <a href="https://jekyllrb.com/" target="_blank">Jekyll</a> & <a href="https://github.com/vfvong/jekyll-theme-tao" target="_blank">Tao</a>
+    </p>
+
+    
+    <p class="column">
+      记录个人工作学习信息
+    </p>
+    
+  </div>
+</footer>
+  
+    </div>
+
+    
+
+    
+  </body>
+</html>

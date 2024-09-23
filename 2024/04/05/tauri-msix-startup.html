@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<link rel="stylesheet" href="/assets/css/normalize.css"/>
+	<link rel="stylesheet" href="/assets/css/open-color.css"/>
+	<link rel="stylesheet" href="/assets/css/tao/styles.css"/>
+
+  <script async src="https://use.fontawesome.com/releases/v6.0.0/js/all.js"></script>
+
+  
+
+</head>
+
+  <body>
+    <div class="wrapper">
+      <header class="masthead">
+  <h2 class="masthead-title">
+    <a href="/">鸽子胡子</a>
+  </h2>
+  
+    <h5 class="masthead-tagline"></h5>
+  
+  
+    <nav class="nav">
+      
+        <a class="nav-item " href="/">
+          Home
+        </a>
+      
+        <a class="nav-item " href="/about">
+          About
+        </a>
+      
+        <a class="nav-item " href="/archive">
+          Archive
+        </a>
+      
+      </nav>
+  
+</header>
+
+      <main>
+        <article class="post">
+  <div class="post-meta post-meta-top">
+    <div>
+      <time datetime="2024-04-05T13:00:00+00:00">
+        <i class="fa-solid fa-calendar-days"></i> 05 Apr 2024
+      </time></div>
+    
+    
+  </div>
+
+  <h1 class="post-title">Tauri MSIX 开机启动适配</h1>
+  
+
+  
+
+  <span class="post-metadata"> Published 5 months and 3 weeks ago. </span> 
+
+  <span class="post-metadata" title="Estimated read time">
+  Reading time: 
+  
+  
+    2 mins
+  
+</span>
+
+
+
+  <div class="post-content">
+    <p>最近将基于<code class="language-plaintext highlighter-rouge">Tauri v2</code> 开发的产品上线微软商店后, 用户反馈开机启动不生效, 这里记录一下复现和解决方案。</p>
+
+<h2 id="复现问题">复现问题</h2>
+
+<p>我们在不同环境测试开机启动都是正常的, 唯独在转换成<code class="language-plaintext highlighter-rouge">MSIX</code> 之后, 安装需要完整签名, 无法进行完整测试。猜测应该和<code class="language-plaintext highlighter-rouge">MSIX</code> 有关。</p>
+
+<p>于是我们尝试了以下步骤:</p>
+
+<ol>
+  <li>创建自签名证书;</li>
+  <li>签名并打包成<code class="language-plaintext highlighter-rouge">MSIX</code>;</li>
+  <li>安装到系统中。</li>
+</ol>
+
+<p>测试结果发现, 确实在<code class="language-plaintext highlighter-rouge">MSIX</code> 中, 开机启动不生效的问题复现了。</p>
+
+<h2 id="查找问题">查找问题</h2>
+
+<p>在<code class="language-plaintext highlighter-rouge">Tauri</code> 项目中, 使用<code class="language-plaintext highlighter-rouge">tauri-plugin-startup</code> 插件实现开机启动, 但是在转换成<code class="language-plaintext highlighter-rouge">MSIX</code> 之后, 开机启动并不生效了。</p>
+
+<p><code class="language-plaintext highlighter-rouge">tauri-plugin-startup</code> 内部使用<code class="language-plaintext highlighter-rouge">auto-launch</code> 实现开机启动的功能, 查看 <code class="language-plaintext highlighter-rouge">Windows</code> 平台特定的实现得知是通过<code class="language-plaintext highlighter-rouge">winreg</code> 库修改注册表实现开机启动的。</p>
+
+<p>以下是<code class="language-plaintext highlighter-rouge">auto-launch</code> 的<code class="language-plaintext highlighter-rouge">Windows</code> 平台的部分实现:</p>
+
+<div class="language-rust highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">use</span> <span class="k">crate</span><span class="p">::{</span><span class="n">AutoLaunch</span><span class="p">,</span> <span class="nb">Result</span><span class="p">};</span>
+<span class="k">use</span> <span class="nn">winreg</span><span class="p">::</span><span class="nn">enums</span><span class="p">::</span><span class="nn">RegType</span><span class="p">::</span><span class="n">REG_BINARY</span><span class="p">;</span>
+<span class="k">use</span> <span class="nn">winreg</span><span class="p">::</span><span class="nn">enums</span><span class="p">::{</span>
+    <span class="n">HKEY_CURRENT_USER</span><span class="p">,</span> <span class="n">HKEY_LOCAL_MACHINE</span><span class="p">,</span> <span class="n">KEY_ALL_ACCESS</span><span class="p">,</span> <span class="n">KEY_READ</span><span class="p">,</span> <span class="n">KEY_SET_VALUE</span><span class="p">,</span>
+<span class="p">};</span>
+<span class="k">use</span> <span class="nn">winreg</span><span class="p">::{</span><span class="n">RegKey</span><span class="p">,</span> <span class="n">RegValue</span><span class="p">};</span>
+
+
+<span class="k">static</span> <span class="n">ADMIN_AL_REGKEY</span><span class="p">:</span> <span class="o">&amp;</span><span class="nb">str</span> <span class="o">=</span> <span class="s">"SOFTWARE</span><span class="se">\\</span><span class="s">WOW6432Node</span><span class="se">\\</span><span class="s">Microsoft</span><span class="se">\\</span><span class="s">Windows</span><span class="se">\\</span><span class="s">CurrentVersion</span><span class="se">\\</span><span class="s">Run"</span><span class="p">;</span>
+<span class="k">static</span> <span class="n">AL_REGKEY</span><span class="p">:</span> <span class="o">&amp;</span><span class="nb">str</span> <span class="o">=</span> <span class="s">"SOFTWARE</span><span class="se">\\</span><span class="s">Microsoft</span><span class="se">\\</span><span class="s">Windows</span><span class="se">\\</span><span class="s">CurrentVersion</span><span class="se">\\</span><span class="s">Run"</span><span class="p">;</span>
+<span class="k">static</span> <span class="n">ADMIN_TASK_MANAGER_OVERRIDE_REGKEY</span><span class="p">:</span> <span class="o">&amp;</span><span class="nb">str</span> <span class="o">=</span>
+    <span class="s">"SOFTWARE</span><span class="se">\\</span><span class="s">Microsoft</span><span class="se">\\</span><span class="s">Windows</span><span class="se">\\</span><span class="s">CurrentVersion</span><span class="se">\\</span><span class="s">Explorer</span><span class="se">\\</span><span class="s">StartupApproved</span><span class="se">\\</span><span class="s">Run32"</span><span class="p">;</span>
+<span class="k">static</span> <span class="n">TASK_MANAGER_OVERRIDE_REGKEY</span><span class="p">:</span> <span class="o">&amp;</span><span class="nb">str</span> <span class="o">=</span>
+    <span class="s">"SOFTWARE</span><span class="se">\\</span><span class="s">Microsoft</span><span class="se">\\</span><span class="s">Windows</span><span class="se">\\</span><span class="s">CurrentVersion</span><span class="se">\\</span><span class="s">Explorer</span><span class="se">\\</span><span class="s">StartupApproved</span><span class="se">\\</span><span class="s">Run"</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p>GitHub permalink: <a href="https://github.com/zzzgydi/auto-launch/blob/2d94a103ca20652a3baf581ca2c296791c35c09b/src/windows.rs#L1-L13">https://github.com/zzzgydi/auto-launch/blob/2d94a103ca20652a3baf581ca2c296791c35c09b/src/windows.rs#L1-L13</a></p>
+
+<p>查询资料得知, <code class="language-plaintext highlighter-rouge">MSIX</code> 默认开启<code class="language-plaintext highlighter-rouge">灵活虚拟化</code>, 开启之后在<code class="language-plaintext highlighter-rouge">MSIX</code> 应用容器中, 应用的注册表并不会真正写入到<strong>系统注册表</strong>中, 而是写入到<strong>虚拟注册表</strong>中, 所以这就是<code class="language-plaintext highlighter-rouge">MSIX</code> 通过修改注册表来配置开机启动不生效原因。</p>
+
+<blockquote>
+  <p>检查<code class="language-plaintext highlighter-rouge">MSI</code>和<code class="language-plaintext highlighter-rouge">MSIX</code> 配置开启启动之后查询注册表项也可以看到(<code class="language-plaintext highlighter-rouge">MSIX</code> 的修改对系统来说并不可见)。</p>
+</blockquote>
+
+<h2 id="解决方案">解决方案</h2>
+
+<p>目前有两种解决方案:</p>
+
+<h3 id="1-关闭灵活虚拟化">1. 关闭灵活虚拟化</h3>
+
+<p>在<code class="language-plaintext highlighter-rouge">MSIX</code> 打包时, 可以选择关闭全部或者部分<code class="language-plaintext highlighter-rouge">灵活虚拟化</code>, 这样应用的注册表内容会真正写入到系统注册表中, 从而实现开机启动。</p>
+
+<h3 id="2-适配灵活虚拟化">2. 适配灵活虚拟化</h3>
+
+<p>如果需要保持<code class="language-plaintext highlighter-rouge">灵活虚拟化</code>并适配最新特性, 可以通过<code class="language-plaintext highlighter-rouge">MSIX</code> 的<code class="language-plaintext highlighter-rouge">StartupTask</code> 来实现开机启动。</p>
+
+<ol>
+  <li>
+    <p>修改<code class="language-plaintext highlighter-rouge">auto-launch</code> crate 的实现并适配<code class="language-plaintext highlighter-rouge">MSIX</code> 的<code class="language-plaintext highlighter-rouge">StartupTask</code>。这个部分我已实现, 你可以查看这个<a href="https://github.com/Hypobenthos/auto-launch-rs/tree/feature/msix">feature/msix</a></p>
+  </li>
+  <li>
+    <p>修改<code class="language-plaintext highlighter-rouge">tauri-plugin-startup</code> 的<code class="language-plaintext highlighter-rouge">auto-launch</code> 的依赖。这个部分我已实现, 你可以查看这个<a href="https://github.com/Hypobenthos/plugins-workspace/tree/feature/msix">feature/msix</a></p>
+  </li>
+  <li>
+    <p>打包同时修改<code class="language-plaintext highlighter-rouge">MSIX</code> 清单文件。</p>
+  </li>
+</ol>
+
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;Package</span>
+  <span class="err">...</span>
+ <span class="na">xmlns=</span><span class="s">"http://schemas.microsoft.com/appx/manifest/foundation/windows10"</span> 
+ <span class="na">xmlns:uap=</span><span class="s">"http://schemas.microsoft.com/appx/manifest/uap/windows10"</span> 
+ <span class="na">xmlns:uap10=</span><span class="s">"http://schemas.microsoft.com/appx/manifest/uap/windows10/10"</span> 
+ <span class="na">xmlns:desktop=</span><span class="s">"http://schemas.microsoft.com/appx/manifest/desktop/windows10"</span>
+ <span class="na">xmlns:desktop7=</span><span class="s">"http://schemas.microsoft.com/appx/manifest/desktop/windows10/7"</span> 
+ <span class="na">xmlns:rescap=</span><span class="s">"http://schemas.microsoft.com/appx/manifest/foundation/windows10/restrictedcapabilities"</span>
+  <span class="na">IgnorableNamespaces=</span><span class="s">"uap uap10 desktop desktop7 rescap"</span><span class="nt">&gt;</span>
+  ...
+  <span class="nt">&lt;Applications&gt;</span>
+    <span class="nt">&lt;Application</span> <span class="na">Id=</span><span class="s">"App"</span> <span class="na">Executable=</span><span class="s">"app.exe"</span> <span class="na">EntryPoint=</span><span class="s">"Windows.FullTrustApplication"</span><span class="nt">&gt;</span>
+        ...
+    <span class="nt">&lt;/Application&gt;</span>
+  <span class="nt">&lt;/Applications&gt;</span>
+  <span class="nt">&lt;Extensions&gt;</span>
+    <span class="nt">&lt;desktop:Extension</span> <span class="na">Category=</span><span class="s">"windows.startupTask"</span> <span class="na">Executable=</span><span class="s">"VFS\ProgramFilesX64\App\app.exe"</span> <span class="na">EntryPoint=</span><span class="s">"Windows.FullTrustApplication"</span><span class="nt">&gt;</span>
+          <span class="nt">&lt;desktop:StartupTask</span> <span class="na">TaskId=</span><span class="s">"AppStartupTaskId"</span> <span class="na">Enabled=</span><span class="s">"true"</span> <span class="na">DisplayName=</span><span class="s">"App"</span> <span class="nt">/&gt;</span>
+    <span class="nt">&lt;/desktop:Extension&gt;</span>
+  <span class="nt">&lt;/Extensions&gt;</span>
+<span class="nt">&lt;/Package&gt;</span>
+</code></pre></div></div>
+
+<p>重新签名打包并安装测试, 开机启动就可以正常工作了。</p>
+
+<hr />
+
+<h2 id="参考和引用">参考和引用</h2>
+
+<ul>
+  <li><a href="https://learn.microsoft.com/zh-cn/windows/msix/package/create-certificate-package-signing">为包签名创建证书</a></li>
+  <li><a href="https://learn.microsoft.com/zh-cn/windows/msix/desktop/flexible-virtualization">灵活虚拟化</a></li>
+  <li><a href="https://github.com/tauri-apps/tauri-plugin-autostart.git">tauri-plugin-startup</a></li>
+  <li><a href="https://github.com/zzzgydi/auto-launch">auto-launch</a></li>
+</ul>
+
+  </div>
+
+  
+</article>
+
+<div class="pagination">
+  
+    <a class="prev post-prev" href="/2024/04/05/publish-tauri-app-to-ms-store.html">
+      <i class="fas fa-chevron-left"></i> <span class="">Publish Tauri app to Microsoft Store
+</span>
+    </a>
+  
+  
+  
+    <span class="next post-next unable"><i class="fas fa-chevron-right"></i></span>
+  
+</div>
+
+
+      </main>
+      <footer class="footer">
+  
+  <div class="social">
+    
+      <a href="mailto:hypobenthos@outlook.com" target="_blank">
+        <i class="fas fa-envelope" title="Email"></i>
+      </a>
+    
+      <a href="https://github.com/gezihuzi" target="_blank">
+        <i class="fab fa-github" title="GitHub"></i>
+      </a>
+    
+  </div>
+  
+  
+  <div class="columns">
+    <p class="column">
+      &copy; <time datetime="2024-09-23T08:39:56+00:00">2024</time>. All rights reserved.
+    </p>
+
+    <p class="column">
+      Powered by <a href="https://jekyllrb.com/" target="_blank">Jekyll</a> & <a href="https://github.com/vfvong/jekyll-theme-tao" target="_blank">Tao</a>
+    </p>
+
+    
+    <p class="column">
+      记录个人工作学习信息
+    </p>
+    
+  </div>
+</footer>
+  
+    </div>
+
+    
+
+    
+  </body>
+</html>

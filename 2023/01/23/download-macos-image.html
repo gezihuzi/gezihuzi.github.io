@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<link rel="stylesheet" href="/assets/css/normalize.css"/>
+	<link rel="stylesheet" href="/assets/css/open-color.css"/>
+	<link rel="stylesheet" href="/assets/css/tao/styles.css"/>
+
+  <script async src="https://use.fontawesome.com/releases/v6.0.0/js/all.js"></script>
+
+  
+
+</head>
+
+  <body>
+    <div class="wrapper">
+      <header class="masthead">
+  <h2 class="masthead-title">
+    <a href="/">鸽子胡子</a>
+  </h2>
+  
+    <h5 class="masthead-tagline"></h5>
+  
+  
+    <nav class="nav">
+      
+        <a class="nav-item " href="/">
+          Home
+        </a>
+      
+        <a class="nav-item " href="/about">
+          About
+        </a>
+      
+        <a class="nav-item " href="/archive">
+          Archive
+        </a>
+      
+      </nav>
+  
+</header>
+
+      <main>
+        <article class="post">
+  <div class="post-meta post-meta-top">
+    <div>
+      <time datetime="2023-01-23T05:00:00+00:00">
+        <i class="fa-solid fa-calendar-days"></i> 23 Jan 2023
+      </time></div>
+    
+    
+  </div>
+
+  <h1 class="post-title">下载完整的macOS 系统镜像</h1>
+  
+
+  
+
+  <span class="post-metadata"> Published 1 year and 8 months ago. </span> 
+
+  <span class="post-metadata" title="Estimated read time">
+  Reading time: 
+  
+  
+    1 min
+  
+</span>
+
+
+
+  <div class="post-content">
+    <p>最近为我的15 款的Mac 更换新的固态硬盘。需要备份系统以便更换完直接恢复。</p>
+
+<p>需要下载完整的<code class="language-plaintext highlighter-rouge">macOS</code> 系统镜像制作可引导的<code class="language-plaintext highlighter-rouge">macOS</code> 安装器。但是<code class="language-plaintext highlighter-rouge">App Store</code> 的下载速度过慢且十分的不稳定, 这里我们将使用<code class="language-plaintext highlighter-rouge">macOS</code> 自带的终端获取完整的<code class="language-plaintext highlighter-rouge">macOS</code> 系统镜像下载链接。</p>
+
+<blockquote>
+  <p>macOS 12.6.2
+终端 2.12.7
+Folx 5.27.1</p>
+</blockquote>
+
+<h2 id="监听系统安装日志">监听系统安装日志</h2>
+
+<p>我们通过终端执行以下命令, 监听系统下载和安装时的日志信息:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">tail</span> <span class="nt">-f</span> /var/log/install.log | <span class="nb">grep</span> .pkg
+</code></pre></div></div>
+
+<p>保持终端运行, 我们执行后续操作</p>
+
+<h2 id="获取并下载">获取并下载</h2>
+
+<p>这里以<code class="language-plaintext highlighter-rouge">macOS Monterey</code>为例, 在<code class="language-plaintext highlighter-rouge">App Store</code> 中搜索下载或者 直接<a href="https://apps.apple.com/cn/app/macos-monterey/id1576738294">下载macOS Monterey</a>进入并下载安装你需要下载的系统镜像。</p>
+
+<blockquote>
+  <p>苹果官方的<a href="https://support.apple.com/zh-cn/HT211683">如何下载 macOS</a>中提供了各个系统版本的App Store 链接</p>
+</blockquote>
+
+<p><img src="/assets/img/macos-monterey.png" alt="macOS Monterey" /></p>
+
+<p>点击「获取」后跳转至系统设置页面, 并弹窗提示是否需要下载当前的系统:</p>
+
+<p><img src="/assets/img/macos-download-alert.png" alt="macOS download alert" /></p>
+
+<p>点击下载后, 获取到下载信息后可以直接取消下载, 监听中的日志会显示我们当前获取到的下载信息:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>2023-01-23 14:27:14+08 MacBookPro15 softwareupdated[316]: Remaining packages to <span class="nb">install </span><span class="k">for </span>product 032-12843 : com.apple.pkg.InstallAssistant.macOSMonterey
+	        SUDistributionPackageURLString <span class="o">=</span> <span class="s2">"https://swdist.apple.com/content/downloads/55/35/032-12843-A_35UCTHBNLI/z1twfbx3mhypq6g7ljtz52z6nsv0n7e4o5/InstallAssistant.pkg"</span><span class="p">;</span>
+	        SUIntegrityDataURL <span class="o">=</span> <span class="s2">"https://swcdn.apple.com/content/downloads/55/35/032-12843-A_35UCTHBNLI/z1twfbx3mhypq6g7ljtz52z6nsv0n7e4o5/InstallAssistan.pkg.integrityDataV1"</span><span class="p">;</span>
+	    Identifier <span class="o">=</span> <span class="s2">"com.apple.pkg.InstallAssistant.macOSMonterey"</span><span class="p">;</span>
+	    URL <span class="o">=</span> <span class="s2">"https://swcdn.apple.com/content/downloads/55/35/032-12843-A_35UCTHBNLI/z1twfbx3mhypq6g7ljtz52z6nsv0n7e4o5/InstallAssistant.pkg"</span><span class="p">;</span>
+	<span class="o">}</span> IntegrityInformation:SUPackageIntegrityInformation<span class="o">(</span>0x7faee45ffdb0<span class="o">)</span>: URL:https://swcdn.apple.com/content/downloads/55/35/032-12843-A_35UCTHBNLI/z1twfbx3mhypq6g7ljtz52z6nsv0n7e4o5/InstallAssistant.pkg.integrityDataV1 Size:42656 Checksum:<span class="o">(</span>null<span class="o">)</span>
+	        PKDownloaderAdditionalReferenceOptionChunklistURL <span class="o">=</span> <span class="s2">"https://swcdn.apple.com/content/downloads/55/35/032-12843-A_35UCTHBNLI/z1twfbx3mhypq6g7ljtz52z6nsv0n7e4o5/InstallAssistant.pkg.integrityDataV1"</span><span class="p">;</span>
+	        SUDistributionPackageURLString <span class="o">=</span> <span class="s2">"https://swdist.apple.com/content/downloads/55/35/032-12843-A_35UCTHBNLI/z1twfbx3mhypq6g7ljtz52z6nsv0n7e4o5/InstallAssistant.pkg"</span><span class="p">;</span>
+	        SUIntegrityDataURL <span class="o">=</span> <span class="s2">"https://swcdn.apple.com/content/downloads/55/35/032-12843-A_35UCTHBNLI/z1twfbx3mhypq6g7ljtz52z6nsv0n7e4o5/InstallAssistan.pkg.integrityDataV1"</span><span class="p">;</span>
+	    Identifier <span class="o">=</span> <span class="s2">"com.apple.pkg.InstallAssistant.macOSMonterey"</span><span class="p">;</span>
+	    URL <span class="o">=</span> <span class="s2">"https://swcdn.apple.com/content/downloads/55/35/032-12843-A_35UCTHBNLI/z1twfbx3mhypq6g7ljtz52z6nsv0n7e4o5/InstallAssistant.pkg"</span><span class="p">;</span>
+	      destination path: /var/folders/zz/zyxvpxvq6csfxvn_n00000s0000068/C/com.apple.SoftwareUpdate/swcdn.apple.com/content/downloads/55/35/032-12843-A_35UCTHBNLI/z1twfbx3mhypq6g7ljtz52z6nsv0n7e4o5/InstallAssistant.pkg
+2023-01-23 14:27:14+08 MacBookPro15 softwareupdated[316]: 032-12843: Starting download of InstallAssistant.pkg <span class="o">(</span>Size:12395078361, HasIntegrityInformation:YES<span class="o">)</span> with URL https://swcdn.apple.com/content/downloads/55/35/032-12843-A_35UCTHBNLI/z1twfbx3mhypq6g7ljtz52z6nsv0n7e4o5/InstallAssistant.pkg
+</code></pre></div></div>
+
+<p>日志中包含的<code class="language-plaintext highlighter-rouge">URL=...</code> 部分就是我们需要的镜像下载链接, 直接通过<code class="language-plaintext highlighter-rouge">Folx</code> 进行下载:</p>
+
+<p><img src="/assets/img/macos-downloading.png" alt="macOS downloading" /></p>
+
+<h2 id="清理">清理</h2>
+
+<p>回到终端, <code class="language-plaintext highlighter-rouge">Ctrl + C</code> 结束当前的监听任务, 等待下载结束即可</p>
+
+  </div>
+
+  
+</article>
+
+<div class="pagination">
+  
+    <a class="prev post-prev" href="/2023/01/21/rbenv.html">
+      <i class="fas fa-chevron-left"></i> <span class="">使用rbenv 管理ruby 环境
+</span>
+    </a>
+  
+  
+  
+    <a class="next post-next" href="/2023/02/17/apple-tv-setup-proxy.html">
+      <span class="">Apple TV 设置代理
+</span> <i class="fas fa-chevron-right"></i> 
+    </a>
+  
+</div>
+
+
+      </main>
+      <footer class="footer">
+  
+  <div class="social">
+    
+      <a href="mailto:hypobenthos@outlook.com" target="_blank">
+        <i class="fas fa-envelope" title="Email"></i>
+      </a>
+    
+      <a href="https://github.com/gezihuzi" target="_blank">
+        <i class="fab fa-github" title="GitHub"></i>
+      </a>
+    
+  </div>
+  
+  
+  <div class="columns">
+    <p class="column">
+      &copy; <time datetime="2024-09-23T08:39:56+00:00">2024</time>. All rights reserved.
+    </p>
+
+    <p class="column">
+      Powered by <a href="https://jekyllrb.com/" target="_blank">Jekyll</a> & <a href="https://github.com/vfvong/jekyll-theme-tao" target="_blank">Tao</a>
+    </p>
+
+    
+    <p class="column">
+      记录个人工作学习信息
+    </p>
+    
+  </div>
+</footer>
+  
+    </div>
+
+    
+
+    
+  </body>
+</html>

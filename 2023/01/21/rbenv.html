@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<link rel="stylesheet" href="/assets/css/normalize.css"/>
+	<link rel="stylesheet" href="/assets/css/open-color.css"/>
+	<link rel="stylesheet" href="/assets/css/tao/styles.css"/>
+
+  <script async src="https://use.fontawesome.com/releases/v6.0.0/js/all.js"></script>
+
+  
+
+</head>
+
+  <body>
+    <div class="wrapper">
+      <header class="masthead">
+  <h2 class="masthead-title">
+    <a href="/">鸽子胡子</a>
+  </h2>
+  
+    <h5 class="masthead-tagline"></h5>
+  
+  
+    <nav class="nav">
+      
+        <a class="nav-item " href="/">
+          Home
+        </a>
+      
+        <a class="nav-item " href="/about">
+          About
+        </a>
+      
+        <a class="nav-item " href="/archive">
+          Archive
+        </a>
+      
+      </nav>
+  
+</header>
+
+      <main>
+        <article class="post">
+  <div class="post-meta post-meta-top">
+    <div>
+      <time datetime="2023-01-21T13:00:00+00:00">
+        <i class="fa-solid fa-calendar-days"></i> 21 Jan 2023
+      </time></div>
+    
+    
+  </div>
+
+  <h1 class="post-title">使用rbenv 管理ruby 环境</h1>
+  
+
+  
+
+  <span class="post-metadata"> Published 1 year and 8 months ago. </span> 
+
+  <span class="post-metadata" title="Estimated read time">
+  Reading time: 
+  
+  
+    1 min
+  
+</span>
+
+
+
+  <div class="post-content">
+    <p>rbenv 可以便捷管理安装和使用各个版本的ruby, 只需要几行命令即可搞定</p>
+
+<h2 id="环境准备">环境准备</h2>
+
+<blockquote>
+  <p>macOS 12.6.2
+rbenv 1.2.0
+ruby 3.2.0</p>
+</blockquote>
+
+<p>使用<code class="language-plaintext highlighter-rouge">homebrew</code> 安装<code class="language-plaintext highlighter-rouge">rbenv</code>, 运行以下命令:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brew <span class="nb">install </span>rbenv ruby-build
+</code></pre></div></div>
+
+<p>在你的<code class="language-plaintext highlighter-rouge">shell</code> 中加载<code class="language-plaintext highlighter-rouge">rbenv</code>, 运行以下命令并根据提示操作:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>rbenv init
+</code></pre></div></div>
+
+<p>安装特定版本的 ruby, 运行以下命令:</p>
+
+<h2 id="安装">安装</h2>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 安装 ruby v3.2.0</span>
+rbenv <span class="nb">install </span>3.2.0 
+</code></pre></div></div>
+
+<p>设置当前使用的版本, 根据实际的需求选择:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 将v3.2.0 设置为全局使用</span>
+rbenv global 3.2.0
+
+<span class="c"># 同时还支持在特定工程下使用特定的版本</span>
+<span class="c"># 将v3.2.0 应用于my-ruby-project 工程中</span>
+<span class="nb">cd </span>my-ruby-project
+rbenv <span class="nb">local </span>3.2.0
+</code></pre></div></div>
+
+<h2 id="使用">使用</h2>
+
+<p>安装完成后重启终端并运行以下命令查看当前的<code class="language-plaintext highlighter-rouge">ruby</code> 版本信息:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ruby <span class="nt">-v</span>
+</code></pre></div></div>
+
+<p>运行后获得以下信息:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ruby 3.2.0 <span class="o">(</span>2022-12-25 revision a528908271<span class="o">)</span> <span class="o">[</span>x86_64-darwin21]
+</code></pre></div></div>
+
+  </div>
+
+  
+</article>
+
+<div class="pagination">
+  
+    <a class="prev post-prev" href="/2023/01/09/setup-jekyll.html">
+      <i class="fas fa-chevron-left"></i> <span class="">使用jekyll 安装和部署博客
+</span>
+    </a>
+  
+  
+  
+    <a class="next post-next" href="/2023/01/23/download-macos-image.html">
+      <span class="">下载完整的macOS 系统镜像
+</span> <i class="fas fa-chevron-right"></i> 
+    </a>
+  
+</div>
+
+
+      </main>
+      <footer class="footer">
+  
+  <div class="social">
+    
+      <a href="mailto:hypobenthos@outlook.com" target="_blank">
+        <i class="fas fa-envelope" title="Email"></i>
+      </a>
+    
+      <a href="https://github.com/gezihuzi" target="_blank">
+        <i class="fab fa-github" title="GitHub"></i>
+      </a>
+    
+  </div>
+  
+  
+  <div class="columns">
+    <p class="column">
+      &copy; <time datetime="2024-09-23T08:39:56+00:00">2024</time>. All rights reserved.
+    </p>
+
+    <p class="column">
+      Powered by <a href="https://jekyllrb.com/" target="_blank">Jekyll</a> & <a href="https://github.com/vfvong/jekyll-theme-tao" target="_blank">Tao</a>
+    </p>
+
+    
+    <p class="column">
+      记录个人工作学习信息
+    </p>
+    
+  </div>
+</footer>
+  
+    </div>
+
+    
+
+    
+  </body>
+</html>

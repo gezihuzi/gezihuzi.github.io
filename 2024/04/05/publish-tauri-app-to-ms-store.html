@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<link rel="stylesheet" href="/assets/css/normalize.css"/>
+	<link rel="stylesheet" href="/assets/css/open-color.css"/>
+	<link rel="stylesheet" href="/assets/css/tao/styles.css"/>
+
+  <script async src="https://use.fontawesome.com/releases/v6.0.0/js/all.js"></script>
+
+  
+
+</head>
+
+  <body>
+    <div class="wrapper">
+      <header class="masthead">
+  <h2 class="masthead-title">
+    <a href="/">鸽子胡子</a>
+  </h2>
+  
+    <h5 class="masthead-tagline"></h5>
+  
+  
+    <nav class="nav">
+      
+        <a class="nav-item " href="/">
+          Home
+        </a>
+      
+        <a class="nav-item " href="/about">
+          About
+        </a>
+      
+        <a class="nav-item " href="/archive">
+          Archive
+        </a>
+      
+      </nav>
+  
+</header>
+
+      <main>
+        <article class="post">
+  <div class="post-meta post-meta-top">
+    <div>
+      <time datetime="2024-04-05T13:00:00+00:00">
+        <i class="fa-solid fa-calendar-days"></i> 05 Apr 2024
+      </time></div>
+    
+    
+  </div>
+
+  <h1 class="post-title">Publish Tauri app to Microsoft Store</h1>
+  
+
+  
+
+  <span class="post-metadata"> Published 5 months and 3 weeks ago. </span> 
+
+  <span class="post-metadata" title="Estimated read time">
+  Reading time: 
+  
+  
+    3 mins
+  
+</span>
+
+
+
+  <div class="post-content">
+    <p>Recently, the app developed using the Tauri framework has been completed and needs to be published to the Microsoft Store, so I am writing this article to document the process of my publication and the issues encountered.</p>
+
+<h2 id="should-i-sign-the-package-or-not">Should I sign the package or not?</h2>
+
+<p><img src="/assets/img/publish-tauri-app-to-ms-store-step7-en.png" alt="Step-7" /></p>
+
+<p>There are currently two options for creating products in the Microsoft Store:</p>
+
+<ol>
+  <li><code class="language-plaintext highlighter-rouge">MSIX</code> or <code class="language-plaintext highlighter-rouge">PWA</code>. <code class="language-plaintext highlighter-rouge">MSIX</code> supports uploading software packages without requiring signing, as Microsoft Store will automatically sign them.</li>
+  <li>For <code class="language-plaintext highlighter-rouge">EXE</code> or <code class="language-plaintext highlighter-rouge">MSIX</code>, a separate certificate purchase is required for signing.</li>
+</ol>
+
+<p>If you are only publishing to the Microsoft Store, you can choose the first option and submit an unsigned software package created using the <code class="language-plaintext highlighter-rouge">MSIX</code> packaging tool.</p>
+
+<h2 id="package-the-application">Package the application</h2>
+
+<p>First, we need to package our application using the packaging tool provided by <code class="language-plaintext highlighter-rouge">Tauri</code>. You can find a tutorial on how to package in the <a href="https://tauri.app/v1/guides/distribution/publishing/">Tauri official documentation - Application Publishing</a>.</p>
+
+<p>Here is the command I used:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>yarn tauri build
+</code></pre></div></div>
+
+<p>After the packaging is completed, you will find the packaged application in the <code class="language-plaintext highlighter-rouge">/target/release/bundle</code> directory. We will be using <code class="language-plaintext highlighter-rouge">*.msi</code> for the next steps.</p>
+
+<h2 id="convert-installer-format">Convert installer format</h2>
+
+<p>We use the official tool provided by Microsoft to convert existing <code class="language-plaintext highlighter-rouge">*.msi</code> installation programs to <code class="language-plaintext highlighter-rouge">*.msix</code> format for publishing to the Microsoft Store. This is a necessary step because the Microsoft Store only accepts applications in <code class="language-plaintext highlighter-rouge">*.msix</code> format. The official documentation can be found <a href="https://learn.microsoft.com/en-us/windows/MSIX/packaging-tool/create-an-MSIX-overview">here</a>.</p>
+
+<h3 id="download-tools">Download tools</h3>
+
+<p>Before converting the application format, you need to download and install the <code class="language-plaintext highlighter-rouge">MSIX Packaging Tool</code>. You can download the <code class="language-plaintext highlighter-rouge">MSIX Packaging Tool</code> from <a href="https://www.microsoft.com/p/MSIX-packaging-tool/9n5lw3jbcxkf">Microsoft Store</a>. Related documentation: <a href="https://learn.microsoft.com/en-us/windows/MSIX/packaging-tool/tool-overview">MSIX Packaging Tool</a>.</p>
+
+<h3 id="convert-installer">Convert installer</h3>
+
+<p>Open the <code class="language-plaintext highlighter-rouge">MSIX Packaging Tool</code>, click on <strong>Application package - Create your package</strong>.</p>
+
+<p><img src="/assets/img/publish-tauri-app-to-ms-store-step1-en.png" alt="Step 1" /></p>
+
+<p>Select the environment in which you want to package, I am running on a local computer, so choose to <strong>Create package on this computer</strong>.</p>
+
+<p><img src="/assets//img/publish-tauri-app-to-ms-store-step2-en.png" alt="Step 2" /></p>
+
+<p>Select your application installer, click <strong>Next</strong>.</p>
+
+<p><img src="/assets/img/publish-tauri-app-to-ms-store-step3-en.png" alt="Step 3" /></p>
+
+<p>Confirm the need to install the ‘MSIX Packaging Tool Driver’, click <strong>Next</strong>.</p>
+
+<p><img src="/assets/img/publish-tauri-app-to-ms-store-step4-en.png" alt="Step 4" /></p>
+
+<p>Select the just packaged <code class="language-plaintext highlighter-rouge">*.msi</code> application installer, fill in the installation program parameters according to the actual situation, select <strong>Do not sign the package</strong> as the signing preference option, and then click <strong>Next</strong>.</p>
+
+<p><img src="/assets/img/publish-tauri-app-to-ms-store-step5-1-en.png" alt="Step 5-1" /></p>
+
+<p>You can obtain this information through Microsoft Partner Center - Apps and Games - Applications - Product Management - Identity.</p>
+
+<ul>
+  <li>Package/Identity/Name</li>
+  <li>Package/Identity/Publisher</li>
+  <li>Package/Properties/PublisherDisplayName</li>
+</ul>
+
+<p><img src="/assets/img/publish-tauri-app-to-ms-store-step5-2-en.png" alt="Step 5-2" /></p>
+
+<p>After obtaining it, follow the instructions to fill in the program package information. Please fill in this information correctly, otherwise an error will be prompted when uploading to the Microsoft Store, then click <strong>Next</strong>.</p>
+
+<p><img src="/assets/img/publish-tauri-app-to-ms-store-step6-en.png" alt="Step 6" /></p>
+
+<p>If there is no accelerator, please click <strong>Next</strong> directly.</p>
+
+<p>Follow the prompts for the subsequent steps, and finally click <strong>Create</strong>. The application will be automatically installed on the current computer. Follow the installation instructions, and after restarting, the application will open automatically. Once packaging is complete, a report and <code class="language-plaintext highlighter-rouge">*.msix</code> file will be generated. Submit this file to Microsoft Store for review.</p>
+
+  </div>
+
+  
+</article>
+
+<div class="pagination">
+  
+    <a class="prev post-prev" href="/2024/04/05/publish-tauri-app-to-ms-store-zh.html">
+      <i class="fas fa-chevron-left"></i> <span class="">将 Tauri 应用发布到 Microsoft Store
+</span>
+    </a>
+  
+  
+  
+    <a class="next post-next" href="/2024/04/05/tauri-msix-startup.html">
+      <span class="">Tauri MSIX 开机启动适配
+</span> <i class="fas fa-chevron-right"></i> 
+    </a>
+  
+</div>
+
+
+      </main>
+      <footer class="footer">
+  
+  <div class="social">
+    
+      <a href="mailto:hypobenthos@outlook.com" target="_blank">
+        <i class="fas fa-envelope" title="Email"></i>
+      </a>
+    
+      <a href="https://github.com/gezihuzi" target="_blank">
+        <i class="fab fa-github" title="GitHub"></i>
+      </a>
+    
+  </div>
+  
+  
+  <div class="columns">
+    <p class="column">
+      &copy; <time datetime="2024-09-23T08:39:56+00:00">2024</time>. All rights reserved.
+    </p>
+
+    <p class="column">
+      Powered by <a href="https://jekyllrb.com/" target="_blank">Jekyll</a> & <a href="https://github.com/vfvong/jekyll-theme-tao" target="_blank">Tao</a>
+    </p>
+
+    
+    <p class="column">
+      记录个人工作学习信息
+    </p>
+    
+  </div>
+</footer>
+  
+    </div>
+
+    
+
+    
+  </body>
+</html>

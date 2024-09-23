@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<link rel="stylesheet" href="/assets/css/normalize.css"/>
+	<link rel="stylesheet" href="/assets/css/open-color.css"/>
+	<link rel="stylesheet" href="/assets/css/tao/styles.css"/>
+
+  <script async src="https://use.fontawesome.com/releases/v6.0.0/js/all.js"></script>
+
+  
+
+</head>
+
+  <body>
+    <div class="wrapper">
+      <header class="masthead">
+  <h2 class="masthead-title">
+    <a href="/">鸽子胡子</a>
+  </h2>
+  
+    <h5 class="masthead-tagline"></h5>
+  
+  
+    <nav class="nav">
+      
+        <a class="nav-item " href="/">
+          Home
+        </a>
+      
+        <a class="nav-item " href="/about">
+          About
+        </a>
+      
+        <a class="nav-item " href="/archive">
+          Archive
+        </a>
+      
+      </nav>
+  
+</header>
+
+      <main>
+        <article class="post">
+  <div class="post-meta post-meta-top">
+    <div>
+      <time datetime="2023-01-09T13:00:00+00:00">
+        <i class="fa-solid fa-calendar-days"></i> 09 Jan 2023
+      </time></div>
+    
+    
+  </div>
+
+  <h1 class="post-title">使用jekyll 安装和部署博客</h1>
+  
+
+  
+
+  <span class="post-metadata"> Published 1 year and 8 months ago. </span> 
+
+  <span class="post-metadata" title="Estimated read time">
+  Reading time: 
+  
+  
+    1 min
+  
+</span>
+
+
+
+  <div class="post-content">
+    <p>使用jekyll 安装和部署博客, 和解决安装时遇到的问题</p>
+
+<h2 id="环境准备">环境准备</h2>
+
+<blockquote>
+  <p>macOS 12.6.2
+ruby 3.2.0</p>
+</blockquote>
+
+<p>安装jekyll 和相关的依赖需要使用<code class="language-plaintext highlighter-rouge">ruby</code>, <code class="language-plaintext highlighter-rouge">macOS</code> 系统自带的<code class="language-plaintext highlighter-rouge">ruby</code> 版本过低且使用非<code class="language-plaintext highlighter-rouge">root</code> 用户<code class="language-plaintext highlighter-rouge">gem</code> 无法安装第三方的依赖。使用<a href="https://github.com/rbenv/rbenv">rbenv</a> 来安装和管理<code class="language-plaintext highlighter-rouge">ruby</code> 环境。</p>
+
+<p>具体的安装和使用请参见<a href="/2023/01/21/rbenv">使用rbenv 管理ruby 环境</a></p>
+
+<p>安装完成后重启终端并运行以下命令查看当前的Ruby 版本信息:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ruby <span class="nt">-v</span>
+</code></pre></div></div>
+
+<p>运行后获得以下信息:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ruby 3.0.0p0 <span class="o">(</span>2020-12-25 revision 95aff21468<span class="o">)</span> <span class="o">[</span>x86_64-darwin21]
+</code></pre></div></div>
+
+<h2 id="安装jekyll">安装jekyll</h2>
+
+<p>前置的依赖环境已经安装完成, 接下来我们安装<code class="language-plaintext highlighter-rouge">jekyll</code>, <code class="language-plaintext highlighter-rouge">jekyll</code>可以帮助我们将<code class="language-plaintext highlighter-rouge">markdown</code> 等文件生成静态的<code class="language-plaintext highlighter-rouge">HTML</code> 文件供我们部署。并支持插件主题等更多特性, 具体的相关信息请参见<a href="https://jekyllrb.com/">jekyll 官网</a></p>
+
+<p>使用以下命令安装Bundler 和jekyll:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>gem <span class="nb">install </span>bundler jekyll
+</code></pre></div></div>
+
+<p>使用jekyll 创建一个名为的网站工程并切换至网站根目录:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>jekyll new my-awesome-site
+<span class="nb">cd </span>my-awesome-site
+</code></pre></div></div>
+
+<p>运行网站:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>bundle <span class="nb">exec </span>jekyll serve
+<span class="c"># 现在可以通过访问 http://localhost:4000 来查看网站信息</span>
+</code></pre></div></div>
+
+<h2 id="遇到的问题">遇到的问题</h2>
+
+<p>安装<code class="language-plaintext highlighter-rouge">jekyll</code> 的过程中, 安装和编译特定的依赖<code class="language-plaintext highlighter-rouge">eventmachine ****</code>时会报错, 大致的内容如下:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>make <span class="s2">"DESTDIR="</span>
+compiling binder.cpp
+In file included from binder.cpp:20:
+./project.h:119:10: fatal error: <span class="s1">'openssl/ssl.h'</span> file not found
+<span class="c">#include &lt;openssl/ssl.h&gt;</span>
+         ^~~~~~~~~~~~~~~
+1 error generated.
+make: <span class="k">***</span> <span class="o">[</span>binder.o] Error 1
+
+make failed, <span class="nb">exit </span>code 2
+
+Gem files will remain installed <span class="k">in</span> /Users/chen/.rvm/gems/ruby-3.0.0/gems/eventmachine-1.2.7 <span class="k">for </span>inspection.
+</code></pre></div></div>
+
+<p>从以上的错误信息中我们了解到, 代码引用了openssl 源码的内容, 但是编译的项目无法找到相关的头文件, 所以编译失败了。所以我们需要去解决这个问题。</p>
+
+<p>目前我使用的电脑是有安装LibreSSL 2.8.3 版本的依赖, 但是经过测试还是无法编译成功。所以我搜索Homebrew 查询openssl 相关的依赖:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brew search openssl
+</code></pre></div></div>
+
+<p>搜索的结果如下:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">==&gt;</span> Formulae
+glib-openssl                                             opensc
+openssl@1.1                                              open-sp
+openssl@3 ✔                                              openfst
+openslp                                                  opencsg
+openssh                                                  openmsx
+opensaml                                                 homebrew/portable-ruby/portable-openssl
+
+<span class="o">==&gt;</span> Casks
+openmsx
+</code></pre></div></div>
+
+<p>发现当前安装的版本是openssl@3 的版本, 可能因为当前安装的版本太高了, 整体的头文件信息已经发生不可调整的更改。所以我打算使用老版本的openssl@1.1 来尝试是否可行。运行一下命令安装openssl@1.1 依赖:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brew <span class="nb">install </span>openssl@1.1
+</code></pre></div></div>
+
+<p>使用命令获取当前已经安装的openssl@1.1 的路径:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brew <span class="nt">--prefix</span> openssl@1.1
+</code></pre></div></div>
+
+<p>获取的路径为:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>/opt/homebrew/opt/openssl@1.1
+</code></pre></div></div>
+
+<p>安装成功后使用以下的命令附加额外的–with-openssl-dir 参数并拼接获取的openssl@1.1 路径信息后重新安装eventmachine 依赖:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>gem <span class="nb">install </span>eventmachine <span class="nt">--</span> <span class="nt">--with-openssl-dir</span><span class="o">=</span>/opt/homebrew/opt/openssl@1.1
+</code></pre></div></div>
+
+<p>安装成功且未继续报错, 然后重新使用安装命令安装jekyll:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>gem <span class="nb">install </span>bundler jekyll
+</code></pre></div></div>
+
+<p>安装成功</p>
+
+  </div>
+
+  
+</article>
+
+<div class="pagination">
+  
+    <span class="prev post-prev unable"><i class="fas fa-chevron-left"></i></span>
+  
+  
+  
+    <a class="next post-next" href="/2023/01/21/rbenv.html">
+      <span class="">使用rbenv 管理ruby 环境
+</span> <i class="fas fa-chevron-right"></i> 
+    </a>
+  
+</div>
+
+
+      </main>
+      <footer class="footer">
+  
+  <div class="social">
+    
+      <a href="mailto:hypobenthos@outlook.com" target="_blank">
+        <i class="fas fa-envelope" title="Email"></i>
+      </a>
+    
+      <a href="https://github.com/gezihuzi" target="_blank">
+        <i class="fab fa-github" title="GitHub"></i>
+      </a>
+    
+  </div>
+  
+  
+  <div class="columns">
+    <p class="column">
+      &copy; <time datetime="2024-09-23T08:39:56+00:00">2024</time>. All rights reserved.
+    </p>
+
+    <p class="column">
+      Powered by <a href="https://jekyllrb.com/" target="_blank">Jekyll</a> & <a href="https://github.com/vfvong/jekyll-theme-tao" target="_blank">Tao</a>
+    </p>
+
+    
+    <p class="column">
+      记录个人工作学习信息
+    </p>
+    
+  </div>
+</footer>
+  
+    </div>
+
+    
+
+    
+  </body>
+</html>

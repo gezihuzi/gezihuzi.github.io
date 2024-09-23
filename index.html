@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<link rel="stylesheet" href="/assets/css/normalize.css"/>
+	<link rel="stylesheet" href="/assets/css/open-color.css"/>
+	<link rel="stylesheet" href="/assets/css/tao/styles.css"/>
+
+  <script async src="https://use.fontawesome.com/releases/v6.0.0/js/all.js"></script>
+
+  
+
+</head>
+
+  <body>
+    <div class="wrapper">
+      <header class="masthead">
+  <h2 class="masthead-title">
+    <a href="/">鸽子胡子</a>
+  </h2>
+  
+    <h5 class="masthead-tagline"></h5>
+  
+  
+    <nav class="nav">
+      
+        <a class="nav-item active" href="/">
+          Home
+        </a>
+      
+        <a class="nav-item " href="/about">
+          About
+        </a>
+      
+        <a class="nav-item " href="/archive">
+          Archive
+        </a>
+      
+      </nav>
+  
+</header>
+
+      <main>
+        <section>
+  
+  
+  
+    <article class="post-entry">
+      <h1 class="post-title"><a href="/2024/04/05/tauri-msix-startup.html">Tauri MSIX 开机启动适配</a></h1>
+      
+      
+      <p>
+        最近将基于Tauri v2 开发的产品上线微软商店后, 用户反馈开机启动不生效, 这里记录一下复现和解决方案。
+
+复现问题
+
+我们在不同环境测试开机启动都是正常的, 唯独在转换成MSIX 之后, 安装需要完整签名, 无法进行完整测试。猜测应该和MSIX 有关。
+
+于是我们尝试了以下步骤:
+
+
+  创建自签名证书;
+  签名并打包成MSIX;
+  安装到系统中。
+
+
+测试结果发现, 确实在MSIX 中, 开机启动不生效的问题复现了。
+
+查找问题
+
+在Tauri 项目中, 使用tauri-plugin-startup 插件实现开机启动, 但是在转换成MSIX 之后, 开机启动并不生效了。
+
+tauri-plugin-startup 内部使用auto-launch 实现开机启动的功能, 查看... <a href="/2024/04/05/tauri-msix-startup.html"><i class="fa-solid fa-angles-right"></i></a>
+      </p>
+
+      <time class="post-meta" datetime="2024-04-05T13:00:00+00:00">
+        <i class="fa-solid fa-calendar-days"></i> 05 Apr 2024
+      </time>
+    </article>
+  
+    <article class="post-entry">
+      <h1 class="post-title"><a href="/2024/04/05/publish-tauri-app-to-ms-store.html">Publish Tauri app to Microsoft Store</a></h1>
+      
+      
+      <p>
+        Recently, the app developed using the Tauri framework has been completed and needs to be published to the Microsoft Store, so I am writing this article to document the process of my publication and the issues encountered.
+
+Should I sign the package or not?
+
+
+
+There are currently two options for creating products in the Microsoft Store:
+
+
+  MSIX ... <a href="/2024/04/05/publish-tauri-app-to-ms-store.html"><i class="fa-solid fa-angles-right"></i></a>
+      </p>
+
+      <time class="post-meta" datetime="2024-04-05T13:00:00+00:00">
+        <i class="fa-solid fa-calendar-days"></i> 05 Apr 2024
+      </time>
+    </article>
+  
+    <article class="post-entry">
+      <h1 class="post-title"><a href="/2024/04/05/publish-tauri-app-to-ms-store-zh.html">将 Tauri 应用发布到 Microsoft Store</a></h1>
+      
+      
+      <p>
+        最近使用Tauri 框架开发的App 已经开发完成, 需要发布到Microsoft Store, 所以写下这篇文章记录我发布的过程和遇到的问题。
+
+签名或者不签名?
+
+
+
+目前在Microsoft Store中创建产品有两种选择:
+
+
+  MSIX 或PWA, MSIX 支持上传无需签名的软件包, 因为Microsoft Store 会自动对其进行签名。
+  EXE 或MSIX 则需要单独购买证书以进行签名。
+
+
+如果您只是发布到Microsoft Store, 您可以选择第一种选项, 并提交使用MSIX 打包工具创建的未签名软件包。如果您需要在其他地方发布, 则需要购买证书以进行签名。
+
+打包应用程序
+
+首先, 我们需要打包我们的应用程序, 使用Tauri 提供的打包工具, 你可以在... <a href="/2024/04/05/publish-tauri-app-to-ms-store-zh.html"><i class="fa-solid fa-angles-right"></i></a>
+      </p>
+
+      <time class="post-meta" datetime="2024-04-05T13:00:00+00:00">
+        <i class="fa-solid fa-calendar-days"></i> 05 Apr 2024
+      </time>
+    </article>
+  
+    <article class="post-entry">
+      <h1 class="post-title"><a href="/2023/02/17/apple-tv-setup-proxy.html">Apple TV 设置代理</a></h1>
+      
+      
+      <p>
+        最近新购入Apple TV, 需要配置代理服务使用Netflix 和Youtube 服务, 所以写下这篇文章记录我配置代理的过程和遇到的问题。
+
+Apple TV 的网络设置中, 是无法直接设置代理服务器的, 我们需要通过Mac 版本的Apple Configurator 软件来设置。
+
+我这边使用使用Surge 作为代理软件, iPad 作为我的代理服务器。Surge 可以替换成任意的主流代理软件, 例如ClashX, 代理软件需要开启局域网代理服务。并使用Apple Configurator 来创建和分享代理配置至Apple TV。
+
+
+  macOS 12.6.2
+Surge v5.3.0
+Apple Configurator v2.16
+
+
+开启并查看代理配置
+
+
+
+如图所示,... <a href="/2023/02/17/apple-tv-setup-proxy.html"><i class="fa-solid fa-angles-right"></i></a>
+      </p>
+
+      <time class="post-meta" datetime="2023-02-17T13:00:00+00:00">
+        <i class="fa-solid fa-calendar-days"></i> 17 Feb 2023
+      </time>
+    </article>
+  
+    <article class="post-entry">
+      <h1 class="post-title"><a href="/2023/01/23/download-macos-image.html">下载完整的macOS 系统镜像</a></h1>
+      
+      
+      <p>
+        最近为我的15 款的Mac 更换新的固态硬盘。需要备份系统以便更换完直接恢复。
+
+需要下载完整的macOS 系统镜像制作可引导的macOS 安装器。但是App Store 的下载速度过慢且十分的不稳定, 这里我们将使用macOS 自带的终端获取完整的macOS 系统镜像下载链接。
+
+
+  macOS 12.6.2
+终端 2.12.7
+Folx 5.27.1
+
+
+监听系统安装日志
+
+我们通过终端执行以下命令, 监听系统下载和安装时的日志信息:
+
+tail -f /var/log/install.log | grep .pkg
+
+
+保持终端运行, 我们执行后续操作
+
+获取并下载
+
+这里以macOS Monterey为例, 在App Store 中搜索下载或者 直接下载macOS Monte... <a href="/2023/01/23/download-macos-image.html"><i class="fa-solid fa-angles-right"></i></a>
+      </p>
+
+      <time class="post-meta" datetime="2023-01-23T05:00:00+00:00">
+        <i class="fa-solid fa-calendar-days"></i> 23 Jan 2023
+      </time>
+    </article>
+  
+    <article class="post-entry">
+      <h1 class="post-title"><a href="/2023/01/21/rbenv.html">使用rbenv 管理ruby 环境</a></h1>
+      
+      
+      <p>
+        rbenv 可以便捷管理安装和使用各个版本的ruby, 只需要几行命令即可搞定
+
+环境准备
+
+
+  macOS 12.6.2
+rbenv 1.2.0
+ruby 3.2.0
+
+
+使用homebrew 安装rbenv, 运行以下命令:
+
+brew install rbenv ruby-build
+
+
+在你的shell 中加载rbenv, 运行以下命令并根据提示操作:
+
+rbenv init
+
+
+安装特定版本的 ruby, 运行以下命令:
+
+安装
+
+# 安装 ruby v3.2.0
+rbenv install 3.2.0 
+
+
+设置当前使用的版本, 根据实际的需求选择:
+
+# 将v3.2.0 设置为全局使用
+rbenv global 3.2.0
+
+# 同时还支持在特定工程下使用特定的版本
+#... <a href="/2023/01/21/rbenv.html"><i class="fa-solid fa-angles-right"></i></a>
+      </p>
+
+      <time class="post-meta" datetime="2023-01-21T13:00:00+00:00">
+        <i class="fa-solid fa-calendar-days"></i> 21 Jan 2023
+      </time>
+    </article>
+  
+    <article class="post-entry">
+      <h1 class="post-title"><a href="/2023/01/09/setup-jekyll.html">使用jekyll 安装和部署博客</a></h1>
+      
+      
+      <p>
+        使用jekyll 安装和部署博客, 和解决安装时遇到的问题
+
+环境准备
+
+
+  macOS 12.6.2
+ruby 3.2.0
+
+
+安装jekyll 和相关的依赖需要使用ruby, macOS 系统自带的ruby 版本过低且使用非root 用户gem 无法安装第三方的依赖。使用rbenv 来安装和管理ruby 环境。
+
+具体的安装和使用请参见使用rbenv 管理ruby 环境
+
+安装完成后重启终端并运行以下命令查看当前的Ruby 版本信息:
+
+ruby -v
+
+
+运行后获得以下信息:
+
+ruby 3.0.0p0 (2020-12-25 revision 95aff21468) [x86_64-darwin21]
+
+
+安装jekyll
+
+前置的依赖环境已经安装完成, 接下来我们安装jek... <a href="/2023/01/09/setup-jekyll.html"><i class="fa-solid fa-angles-right"></i></a>
+      </p>
+
+      <time class="post-meta" datetime="2023-01-09T13:00:00+00:00">
+        <i class="fa-solid fa-calendar-days"></i> 09 Jan 2023
+      </time>
+    </article>
+  
+</section>
+
+
+
+      </main>
+      <footer class="footer">
+  
+  <div class="social">
+    
+      <a href="mailto:hypobenthos@outlook.com" target="_blank">
+        <i class="fas fa-envelope" title="Email"></i>
+      </a>
+    
+      <a href="https://github.com/gezihuzi" target="_blank">
+        <i class="fab fa-github" title="GitHub"></i>
+      </a>
+    
+  </div>
+  
+  
+  <div class="columns">
+    <p class="column">
+      &copy; <time datetime="2024-09-23T08:39:56+00:00">2024</time>. All rights reserved.
+    </p>
+
+    <p class="column">
+      Powered by <a href="https://jekyllrb.com/" target="_blank">Jekyll</a> & <a href="https://github.com/vfvong/jekyll-theme-tao" target="_blank">Tao</a>
+    </p>
+
+    
+    <p class="column">
+      记录个人工作学习信息
+    </p>
+    
+  </div>
+</footer>
+  
+    </div>
+
+    
+
+    
+  </body>
+</html>

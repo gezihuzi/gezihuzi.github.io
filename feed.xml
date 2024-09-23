@@ -1,0 +1,550 @@
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.3.3">Jekyll</generator><link href="https://gezihuzi.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://gezihuzi.github.io/" rel="alternate" type="text/html" /><updated>2024-09-23T08:39:56+00:00</updated><id>https://gezihuzi.github.io/feed.xml</id><title type="html">鸽子胡子</title><subtitle>记录个人工作学习信息</subtitle><entry><title type="html">将 Tauri 应用发布到 Microsoft Store</title><link href="https://gezihuzi.github.io/2024/04/05/publish-tauri-app-to-ms-store-zh.html" rel="alternate" type="text/html" title="将 Tauri 应用发布到 Microsoft Store" /><published>2024-04-05T13:00:00+00:00</published><updated>2024-04-05T13:00:00+00:00</updated><id>https://gezihuzi.github.io/2024/04/05/publish-tauri-app-to-ms-store-zh</id><content type="html" xml:base="https://gezihuzi.github.io/2024/04/05/publish-tauri-app-to-ms-store-zh.html"><![CDATA[<p>最近使用Tauri 框架开发的App 已经开发完成, 需要发布到Microsoft Store, 所以写下这篇文章记录我发布的过程和遇到的问题。</p>
+
+<h2 id="签名或者不签名">签名或者不签名?</h2>
+
+<p><img src="/assets/img/publish-tauri-app-to-ms-store-step7.png" alt="Step-7" /></p>
+
+<p>目前在Microsoft Store中创建产品有两种选择:</p>
+
+<ol>
+  <li><code class="language-plaintext highlighter-rouge">MSIX</code> 或<code class="language-plaintext highlighter-rouge">PWA</code>, <code class="language-plaintext highlighter-rouge">MSIX</code> 支持上传无需签名的软件包, 因为Microsoft Store 会自动对其进行签名。</li>
+  <li><code class="language-plaintext highlighter-rouge">EXE</code> 或<code class="language-plaintext highlighter-rouge">MSIX</code> 则需要单独购买证书以进行签名。</li>
+</ol>
+
+<p>如果您只是发布到Microsoft Store, 您可以选择第一种选项, 并提交使用<code class="language-plaintext highlighter-rouge">MSIX</code> 打包工具创建的未签名软件包。如果您需要在其他地方发布, 则需要购买证书以进行签名。</p>
+
+<h2 id="打包应用程序">打包应用程序</h2>
+
+<p>首先, 我们需要打包我们的应用程序, 使用<code class="language-plaintext highlighter-rouge">Tauri</code> 提供的打包工具, 你可以在<a href="https://tauri.app/v1/guides/distribution/publishing/">Tauri 官方文档-应用发布</a> 找到如何打包的教程。</p>
+
+<p>以下是我使用的命令:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>yarn tauri build
+</code></pre></div></div>
+
+<p>在打包完成后, 你会在<code class="language-plaintext highlighter-rouge">/target/release/bundle</code> 目录下找到打包好的应用程序。我们使用<code class="language-plaintext highlighter-rouge">*.msi</code> 进行接下来的步骤。</p>
+
+<h2 id="转换安装程序格式">转换安装程序格式</h2>
+
+<p>我们使用微软提供的官方工具, 将已有的<code class="language-plaintext highlighter-rouge">*.msi</code> 安装程序转换成<code class="language-plaintext highlighter-rouge">*.msix</code> 格式, 以便发布到Microsoft Store。这是一个必须的步骤, 因为Microsoft Store 只接受<code class="language-plaintext highlighter-rouge">*.msix</code> 格式的应用程序。官方文档可以在<a href="https://learn.microsoft.com/en-us/windows/MSIX/packaging-tool/create-an-MSIX-overview">这里</a> 找到。</p>
+
+<h3 id="下载工具">下载工具</h3>
+
+<p>转换应用格式之前, 你需要先下载和安装<code class="language-plaintext highlighter-rouge">MSIX Packaging Tool</code>, 你可以在<a href="https://www.microsoft.com/p/MSIX-packaging-tool/9n5lw3jbcxkf">Microsoft Store</a> 下载<code class="language-plaintext highlighter-rouge">MSIX Packaging Tool</code>。相关说明文档: <a href="https://learn.microsoft.com/en-us/windows/MSIX/packaging-tool/tool-overview">MSIX Packaging Tool</a>。</p>
+
+<h3 id="转换安装程序">转换安装程序</h3>
+
+<p>打开<code class="language-plaintext highlighter-rouge">MSIX Packaging Tool</code>, 点击<strong>应用程序包-创建你的应用包</strong>。</p>
+
+<p><img src="/assets/img/publish-tauri-app-to-ms-store-step1.png" alt="Step 1" /></p>
+
+<p>选择想要在其中进行打包的环境, 我在本地计算机中运行, 所以选择在<strong>此计算机中创建程序包</strong>。</p>
+
+<p><img src="/assets//img/publish-tauri-app-to-ms-store-step2.png" alt="Step 2" /></p>
+
+<p>选择你的应用程序安装程序, 点击<strong>下一步</strong>。</p>
+
+<p><img src="/assets/img/publish-tauri-app-to-ms-store-step3.png" alt="Step 3" /></p>
+
+<p>确认需要安装的<code class="language-plaintext highlighter-rouge">MSIX 打包工具驱动程序</code>, 点击<strong>下一步</strong>。</p>
+
+<p><img src="/assets/img/publish-tauri-app-to-ms-store-step4.png" alt="Step 4" /></p>
+
+<p>选择刚刚打包好的<code class="language-plaintext highlighter-rouge">*.msi</code>应用安装程序, 安装程序参数根据实际情况进行填写, 签名首选项选择<strong>不对程序包进行签名</strong>, 然后点击<strong>下一步</strong>。</p>
+
+<p><img src="/assets/img/publish-tauri-app-to-ms-store-step5-1.png" alt="Step 5-1" /></p>
+
+<p>你可以通过Microsoft 合作伙伴中心-应用和游戏-应用程序-产品管理-产品标识中获取到这些信息。</p>
+
+<ul>
+  <li>包/标识/名称</li>
+  <li>包/标识/发行商</li>
+  <li>包/属性/发布者显示名称</li>
+</ul>
+
+<p><img src="/assets/img/publish-tauri-app-to-ms-store-step5-2.png" alt="Step 5-2" /></p>
+
+<p>获取之后按照说明, 填入程序包信息, 请正确填写这些信息, 否则微软商店上传时会提示错误, 然后点击<strong>下一步</strong>。</p>
+
+<p><img src="/assets/img/publish-tauri-app-to-ms-store-step6.png" alt="Step 6" /></p>
+
+<p>如没有加速器, 请直接点击<strong>下一步</strong>。</p>
+
+<p>后续的步骤按照提示进行操作, 最后点击<strong>创建</strong>。应用会自动安装至当前计算机, 按照操作提示进行安装, 重启后, 应用会自动打开, 打包完成会生成一个报告和<code class="language-plaintext highlighter-rouge">*.msix</code>文件。将此文件提交至Microsoft Store 进行审核即可。</p>]]></content><author><name></name></author><summary type="html"><![CDATA[最近使用Tauri 框架开发的App 已经开发完成, 需要发布到Microsoft Store, 所以写下这篇文章记录我发布的过程和遇到的问题。]]></summary></entry><entry><title type="html">Publish Tauri app to Microsoft Store</title><link href="https://gezihuzi.github.io/2024/04/05/publish-tauri-app-to-ms-store.html" rel="alternate" type="text/html" title="Publish Tauri app to Microsoft Store" /><published>2024-04-05T13:00:00+00:00</published><updated>2024-04-05T13:00:00+00:00</updated><id>https://gezihuzi.github.io/2024/04/05/publish-tauri-app-to-ms-store</id><content type="html" xml:base="https://gezihuzi.github.io/2024/04/05/publish-tauri-app-to-ms-store.html"><![CDATA[<p>Recently, the app developed using the Tauri framework has been completed and needs to be published to the Microsoft Store, so I am writing this article to document the process of my publication and the issues encountered.</p>
+
+<h2 id="should-i-sign-the-package-or-not">Should I sign the package or not?</h2>
+
+<p><img src="/assets/img/publish-tauri-app-to-ms-store-step7-en.png" alt="Step-7" /></p>
+
+<p>There are currently two options for creating products in the Microsoft Store:</p>
+
+<ol>
+  <li><code class="language-plaintext highlighter-rouge">MSIX</code> or <code class="language-plaintext highlighter-rouge">PWA</code>. <code class="language-plaintext highlighter-rouge">MSIX</code> supports uploading software packages without requiring signing, as Microsoft Store will automatically sign them.</li>
+  <li>For <code class="language-plaintext highlighter-rouge">EXE</code> or <code class="language-plaintext highlighter-rouge">MSIX</code>, a separate certificate purchase is required for signing.</li>
+</ol>
+
+<p>If you are only publishing to the Microsoft Store, you can choose the first option and submit an unsigned software package created using the <code class="language-plaintext highlighter-rouge">MSIX</code> packaging tool.</p>
+
+<h2 id="package-the-application">Package the application</h2>
+
+<p>First, we need to package our application using the packaging tool provided by <code class="language-plaintext highlighter-rouge">Tauri</code>. You can find a tutorial on how to package in the <a href="https://tauri.app/v1/guides/distribution/publishing/">Tauri official documentation - Application Publishing</a>.</p>
+
+<p>Here is the command I used:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>yarn tauri build
+</code></pre></div></div>
+
+<p>After the packaging is completed, you will find the packaged application in the <code class="language-plaintext highlighter-rouge">/target/release/bundle</code> directory. We will be using <code class="language-plaintext highlighter-rouge">*.msi</code> for the next steps.</p>
+
+<h2 id="convert-installer-format">Convert installer format</h2>
+
+<p>We use the official tool provided by Microsoft to convert existing <code class="language-plaintext highlighter-rouge">*.msi</code> installation programs to <code class="language-plaintext highlighter-rouge">*.msix</code> format for publishing to the Microsoft Store. This is a necessary step because the Microsoft Store only accepts applications in <code class="language-plaintext highlighter-rouge">*.msix</code> format. The official documentation can be found <a href="https://learn.microsoft.com/en-us/windows/MSIX/packaging-tool/create-an-MSIX-overview">here</a>.</p>
+
+<h3 id="download-tools">Download tools</h3>
+
+<p>Before converting the application format, you need to download and install the <code class="language-plaintext highlighter-rouge">MSIX Packaging Tool</code>. You can download the <code class="language-plaintext highlighter-rouge">MSIX Packaging Tool</code> from <a href="https://www.microsoft.com/p/MSIX-packaging-tool/9n5lw3jbcxkf">Microsoft Store</a>. Related documentation: <a href="https://learn.microsoft.com/en-us/windows/MSIX/packaging-tool/tool-overview">MSIX Packaging Tool</a>.</p>
+
+<h3 id="convert-installer">Convert installer</h3>
+
+<p>Open the <code class="language-plaintext highlighter-rouge">MSIX Packaging Tool</code>, click on <strong>Application package - Create your package</strong>.</p>
+
+<p><img src="/assets/img/publish-tauri-app-to-ms-store-step1-en.png" alt="Step 1" /></p>
+
+<p>Select the environment in which you want to package, I am running on a local computer, so choose to <strong>Create package on this computer</strong>.</p>
+
+<p><img src="/assets//img/publish-tauri-app-to-ms-store-step2-en.png" alt="Step 2" /></p>
+
+<p>Select your application installer, click <strong>Next</strong>.</p>
+
+<p><img src="/assets/img/publish-tauri-app-to-ms-store-step3-en.png" alt="Step 3" /></p>
+
+<p>Confirm the need to install the ‘MSIX Packaging Tool Driver’, click <strong>Next</strong>.</p>
+
+<p><img src="/assets/img/publish-tauri-app-to-ms-store-step4-en.png" alt="Step 4" /></p>
+
+<p>Select the just packaged <code class="language-plaintext highlighter-rouge">*.msi</code> application installer, fill in the installation program parameters according to the actual situation, select <strong>Do not sign the package</strong> as the signing preference option, and then click <strong>Next</strong>.</p>
+
+<p><img src="/assets/img/publish-tauri-app-to-ms-store-step5-1-en.png" alt="Step 5-1" /></p>
+
+<p>You can obtain this information through Microsoft Partner Center - Apps and Games - Applications - Product Management - Identity.</p>
+
+<ul>
+  <li>Package/Identity/Name</li>
+  <li>Package/Identity/Publisher</li>
+  <li>Package/Properties/PublisherDisplayName</li>
+</ul>
+
+<p><img src="/assets/img/publish-tauri-app-to-ms-store-step5-2-en.png" alt="Step 5-2" /></p>
+
+<p>After obtaining it, follow the instructions to fill in the program package information. Please fill in this information correctly, otherwise an error will be prompted when uploading to the Microsoft Store, then click <strong>Next</strong>.</p>
+
+<p><img src="/assets/img/publish-tauri-app-to-ms-store-step6-en.png" alt="Step 6" /></p>
+
+<p>If there is no accelerator, please click <strong>Next</strong> directly.</p>
+
+<p>Follow the prompts for the subsequent steps, and finally click <strong>Create</strong>. The application will be automatically installed on the current computer. Follow the installation instructions, and after restarting, the application will open automatically. Once packaging is complete, a report and <code class="language-plaintext highlighter-rouge">*.msix</code> file will be generated. Submit this file to Microsoft Store for review.</p>]]></content><author><name></name></author><summary type="html"><![CDATA[Recently, the app developed using the Tauri framework has been completed and needs to be published to the Microsoft Store, so I am writing this article to document the process of my publication and the issues encountered.]]></summary></entry><entry><title type="html">Tauri MSIX 开机启动适配</title><link href="https://gezihuzi.github.io/2024/04/05/tauri-msix-startup.html" rel="alternate" type="text/html" title="Tauri MSIX 开机启动适配" /><published>2024-04-05T13:00:00+00:00</published><updated>2024-04-05T13:00:00+00:00</updated><id>https://gezihuzi.github.io/2024/04/05/tauri-msix-startup</id><content type="html" xml:base="https://gezihuzi.github.io/2024/04/05/tauri-msix-startup.html"><![CDATA[<p>最近将基于<code class="language-plaintext highlighter-rouge">Tauri v2</code> 开发的产品上线微软商店后, 用户反馈开机启动不生效, 这里记录一下复现和解决方案。</p>
+
+<h2 id="复现问题">复现问题</h2>
+
+<p>我们在不同环境测试开机启动都是正常的, 唯独在转换成<code class="language-plaintext highlighter-rouge">MSIX</code> 之后, 安装需要完整签名, 无法进行完整测试。猜测应该和<code class="language-plaintext highlighter-rouge">MSIX</code> 有关。</p>
+
+<p>于是我们尝试了以下步骤:</p>
+
+<ol>
+  <li>创建自签名证书;</li>
+  <li>签名并打包成<code class="language-plaintext highlighter-rouge">MSIX</code>;</li>
+  <li>安装到系统中。</li>
+</ol>
+
+<p>测试结果发现, 确实在<code class="language-plaintext highlighter-rouge">MSIX</code> 中, 开机启动不生效的问题复现了。</p>
+
+<h2 id="查找问题">查找问题</h2>
+
+<p>在<code class="language-plaintext highlighter-rouge">Tauri</code> 项目中, 使用<code class="language-plaintext highlighter-rouge">tauri-plugin-startup</code> 插件实现开机启动, 但是在转换成<code class="language-plaintext highlighter-rouge">MSIX</code> 之后, 开机启动并不生效了。</p>
+
+<p><code class="language-plaintext highlighter-rouge">tauri-plugin-startup</code> 内部使用<code class="language-plaintext highlighter-rouge">auto-launch</code> 实现开机启动的功能, 查看 <code class="language-plaintext highlighter-rouge">Windows</code> 平台特定的实现得知是通过<code class="language-plaintext highlighter-rouge">winreg</code> 库修改注册表实现开机启动的。</p>
+
+<p>以下是<code class="language-plaintext highlighter-rouge">auto-launch</code> 的<code class="language-plaintext highlighter-rouge">Windows</code> 平台的部分实现:</p>
+
+<div class="language-rust highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">use</span> <span class="k">crate</span><span class="p">::{</span><span class="n">AutoLaunch</span><span class="p">,</span> <span class="nb">Result</span><span class="p">};</span>
+<span class="k">use</span> <span class="nn">winreg</span><span class="p">::</span><span class="nn">enums</span><span class="p">::</span><span class="nn">RegType</span><span class="p">::</span><span class="n">REG_BINARY</span><span class="p">;</span>
+<span class="k">use</span> <span class="nn">winreg</span><span class="p">::</span><span class="nn">enums</span><span class="p">::{</span>
+    <span class="n">HKEY_CURRENT_USER</span><span class="p">,</span> <span class="n">HKEY_LOCAL_MACHINE</span><span class="p">,</span> <span class="n">KEY_ALL_ACCESS</span><span class="p">,</span> <span class="n">KEY_READ</span><span class="p">,</span> <span class="n">KEY_SET_VALUE</span><span class="p">,</span>
+<span class="p">};</span>
+<span class="k">use</span> <span class="nn">winreg</span><span class="p">::{</span><span class="n">RegKey</span><span class="p">,</span> <span class="n">RegValue</span><span class="p">};</span>
+
+
+<span class="k">static</span> <span class="n">ADMIN_AL_REGKEY</span><span class="p">:</span> <span class="o">&amp;</span><span class="nb">str</span> <span class="o">=</span> <span class="s">"SOFTWARE</span><span class="se">\\</span><span class="s">WOW6432Node</span><span class="se">\\</span><span class="s">Microsoft</span><span class="se">\\</span><span class="s">Windows</span><span class="se">\\</span><span class="s">CurrentVersion</span><span class="se">\\</span><span class="s">Run"</span><span class="p">;</span>
+<span class="k">static</span> <span class="n">AL_REGKEY</span><span class="p">:</span> <span class="o">&amp;</span><span class="nb">str</span> <span class="o">=</span> <span class="s">"SOFTWARE</span><span class="se">\\</span><span class="s">Microsoft</span><span class="se">\\</span><span class="s">Windows</span><span class="se">\\</span><span class="s">CurrentVersion</span><span class="se">\\</span><span class="s">Run"</span><span class="p">;</span>
+<span class="k">static</span> <span class="n">ADMIN_TASK_MANAGER_OVERRIDE_REGKEY</span><span class="p">:</span> <span class="o">&amp;</span><span class="nb">str</span> <span class="o">=</span>
+    <span class="s">"SOFTWARE</span><span class="se">\\</span><span class="s">Microsoft</span><span class="se">\\</span><span class="s">Windows</span><span class="se">\\</span><span class="s">CurrentVersion</span><span class="se">\\</span><span class="s">Explorer</span><span class="se">\\</span><span class="s">StartupApproved</span><span class="se">\\</span><span class="s">Run32"</span><span class="p">;</span>
+<span class="k">static</span> <span class="n">TASK_MANAGER_OVERRIDE_REGKEY</span><span class="p">:</span> <span class="o">&amp;</span><span class="nb">str</span> <span class="o">=</span>
+    <span class="s">"SOFTWARE</span><span class="se">\\</span><span class="s">Microsoft</span><span class="se">\\</span><span class="s">Windows</span><span class="se">\\</span><span class="s">CurrentVersion</span><span class="se">\\</span><span class="s">Explorer</span><span class="se">\\</span><span class="s">StartupApproved</span><span class="se">\\</span><span class="s">Run"</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p>GitHub permalink: <a href="https://github.com/zzzgydi/auto-launch/blob/2d94a103ca20652a3baf581ca2c296791c35c09b/src/windows.rs#L1-L13">https://github.com/zzzgydi/auto-launch/blob/2d94a103ca20652a3baf581ca2c296791c35c09b/src/windows.rs#L1-L13</a></p>
+
+<p>查询资料得知, <code class="language-plaintext highlighter-rouge">MSIX</code> 默认开启<code class="language-plaintext highlighter-rouge">灵活虚拟化</code>, 开启之后在<code class="language-plaintext highlighter-rouge">MSIX</code> 应用容器中, 应用的注册表并不会真正写入到<strong>系统注册表</strong>中, 而是写入到<strong>虚拟注册表</strong>中, 所以这就是<code class="language-plaintext highlighter-rouge">MSIX</code> 通过修改注册表来配置开机启动不生效原因。</p>
+
+<blockquote>
+  <p>检查<code class="language-plaintext highlighter-rouge">MSI</code>和<code class="language-plaintext highlighter-rouge">MSIX</code> 配置开启启动之后查询注册表项也可以看到(<code class="language-plaintext highlighter-rouge">MSIX</code> 的修改对系统来说并不可见)。</p>
+</blockquote>
+
+<h2 id="解决方案">解决方案</h2>
+
+<p>目前有两种解决方案:</p>
+
+<h3 id="1-关闭灵活虚拟化">1. 关闭灵活虚拟化</h3>
+
+<p>在<code class="language-plaintext highlighter-rouge">MSIX</code> 打包时, 可以选择关闭全部或者部分<code class="language-plaintext highlighter-rouge">灵活虚拟化</code>, 这样应用的注册表内容会真正写入到系统注册表中, 从而实现开机启动。</p>
+
+<h3 id="2-适配灵活虚拟化">2. 适配灵活虚拟化</h3>
+
+<p>如果需要保持<code class="language-plaintext highlighter-rouge">灵活虚拟化</code>并适配最新特性, 可以通过<code class="language-plaintext highlighter-rouge">MSIX</code> 的<code class="language-plaintext highlighter-rouge">StartupTask</code> 来实现开机启动。</p>
+
+<ol>
+  <li>
+    <p>修改<code class="language-plaintext highlighter-rouge">auto-launch</code> crate 的实现并适配<code class="language-plaintext highlighter-rouge">MSIX</code> 的<code class="language-plaintext highlighter-rouge">StartupTask</code>。这个部分我已实现, 你可以查看这个<a href="https://github.com/Hypobenthos/auto-launch-rs/tree/feature/msix">feature/msix</a></p>
+  </li>
+  <li>
+    <p>修改<code class="language-plaintext highlighter-rouge">tauri-plugin-startup</code> 的<code class="language-plaintext highlighter-rouge">auto-launch</code> 的依赖。这个部分我已实现, 你可以查看这个<a href="https://github.com/Hypobenthos/plugins-workspace/tree/feature/msix">feature/msix</a></p>
+  </li>
+  <li>
+    <p>打包同时修改<code class="language-plaintext highlighter-rouge">MSIX</code> 清单文件。</p>
+  </li>
+</ol>
+
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;Package</span>
+  <span class="err">...</span>
+ <span class="na">xmlns=</span><span class="s">"http://schemas.microsoft.com/appx/manifest/foundation/windows10"</span> 
+ <span class="na">xmlns:uap=</span><span class="s">"http://schemas.microsoft.com/appx/manifest/uap/windows10"</span> 
+ <span class="na">xmlns:uap10=</span><span class="s">"http://schemas.microsoft.com/appx/manifest/uap/windows10/10"</span> 
+ <span class="na">xmlns:desktop=</span><span class="s">"http://schemas.microsoft.com/appx/manifest/desktop/windows10"</span>
+ <span class="na">xmlns:desktop7=</span><span class="s">"http://schemas.microsoft.com/appx/manifest/desktop/windows10/7"</span> 
+ <span class="na">xmlns:rescap=</span><span class="s">"http://schemas.microsoft.com/appx/manifest/foundation/windows10/restrictedcapabilities"</span>
+  <span class="na">IgnorableNamespaces=</span><span class="s">"uap uap10 desktop desktop7 rescap"</span><span class="nt">&gt;</span>
+  ...
+  <span class="nt">&lt;Applications&gt;</span>
+    <span class="nt">&lt;Application</span> <span class="na">Id=</span><span class="s">"App"</span> <span class="na">Executable=</span><span class="s">"app.exe"</span> <span class="na">EntryPoint=</span><span class="s">"Windows.FullTrustApplication"</span><span class="nt">&gt;</span>
+        ...
+    <span class="nt">&lt;/Application&gt;</span>
+  <span class="nt">&lt;/Applications&gt;</span>
+  <span class="nt">&lt;Extensions&gt;</span>
+    <span class="nt">&lt;desktop:Extension</span> <span class="na">Category=</span><span class="s">"windows.startupTask"</span> <span class="na">Executable=</span><span class="s">"VFS\ProgramFilesX64\App\app.exe"</span> <span class="na">EntryPoint=</span><span class="s">"Windows.FullTrustApplication"</span><span class="nt">&gt;</span>
+          <span class="nt">&lt;desktop:StartupTask</span> <span class="na">TaskId=</span><span class="s">"AppStartupTaskId"</span> <span class="na">Enabled=</span><span class="s">"true"</span> <span class="na">DisplayName=</span><span class="s">"App"</span> <span class="nt">/&gt;</span>
+    <span class="nt">&lt;/desktop:Extension&gt;</span>
+  <span class="nt">&lt;/Extensions&gt;</span>
+<span class="nt">&lt;/Package&gt;</span>
+</code></pre></div></div>
+
+<p>重新签名打包并安装测试, 开机启动就可以正常工作了。</p>
+
+<hr />
+
+<h2 id="参考和引用">参考和引用</h2>
+
+<ul>
+  <li><a href="https://learn.microsoft.com/zh-cn/windows/msix/package/create-certificate-package-signing">为包签名创建证书</a></li>
+  <li><a href="https://learn.microsoft.com/zh-cn/windows/msix/desktop/flexible-virtualization">灵活虚拟化</a></li>
+  <li><a href="https://github.com/tauri-apps/tauri-plugin-autostart.git">tauri-plugin-startup</a></li>
+  <li><a href="https://github.com/zzzgydi/auto-launch">auto-launch</a></li>
+</ul>]]></content><author><name></name></author><summary type="html"><![CDATA[最近将基于Tauri v2 开发的产品上线微软商店后, 用户反馈开机启动不生效, 这里记录一下复现和解决方案。]]></summary></entry><entry><title type="html">Apple TV 设置代理</title><link href="https://gezihuzi.github.io/2023/02/17/apple-tv-setup-proxy.html" rel="alternate" type="text/html" title="Apple TV 设置代理" /><published>2023-02-17T13:00:00+00:00</published><updated>2023-02-17T13:00:00+00:00</updated><id>https://gezihuzi.github.io/2023/02/17/apple-tv-setup-proxy</id><content type="html" xml:base="https://gezihuzi.github.io/2023/02/17/apple-tv-setup-proxy.html"><![CDATA[<p>最近新购入Apple TV, 需要配置代理服务使用Netflix 和Youtube 服务, 所以写下这篇文章记录我配置代理的过程和遇到的问题。</p>
+
+<p>Apple TV 的网络设置中, 是无法直接设置代理服务器的, 我们需要通过Mac 版本的Apple Configurator 软件来设置。</p>
+
+<p>我这边使用使用Surge 作为代理软件, iPad 作为我的代理服务器。Surge 可以替换成任意的主流代理软件, 例如ClashX, 代理软件需要开启局域网代理服务。并使用Apple Configurator 来创建和分享代理配置至Apple TV。</p>
+
+<blockquote>
+  <p>macOS 12.6.2
+Surge v5.3.0
+Apple Configurator v2.16</p>
+</blockquote>
+
+<h2 id="开启并查看代理配置">开启并查看代理配置</h2>
+
+<p><img src="/assets/img/apple-tv-surge-settings.png" alt="Surge settings" /></p>
+
+<p>如图所示, 当前本地服务的代理服务地址和端口信息, 记录以下信息, 配置时会使用到。</p>
+
+<p>代理地址: <code class="language-plaintext highlighter-rouge">192.168.31.114</code>
+代理端口: <code class="language-plaintext highlighter-rouge">6152</code></p>
+
+<p>每个代理软件的配置会有所区别, 请查看相关软件的配置, 并确保代理软件开启<code class="language-plaintext highlighter-rouge">局域网代理</code> 服务。</p>
+
+<h2 id="创建wifi-和代理配置">创建WiFi 和代理配置</h2>
+
+<p>打开Apple Configurator, 在菜单栏中打开文件-新建描述文件。</p>
+
+<p><img src="/assets/img/apple-tv-profile-step0.png" alt="New profile" /></p>
+
+<ol>
+  <li>键入配置文件名称, 建议选择简单易懂的名称，例如<code class="language-plaintext highlighter-rouge">WiFi-Proxy</code>, 这将展示在Apple TV 中。</li>
+  <li>选择侧边导航<code class="language-plaintext highlighter-rouge">WiFi</code> 栏并添加配置信息。</li>
+</ol>
+
+<p><img src="/assets/img/apple-tv-profile-step1.png" alt="Step 1" /></p>
+
+<p>点击配置开始</p>
+
+<p><img src="/assets/img/apple-tv-profile-step2.png" alt="Step 2" /></p>
+
+<p>以下是示例信息, 请根据实机的情况进行配置。</p>
+
+<ol>
+  <li>Wi-Fi SSID: <code class="language-plaintext highlighter-rouge">HUAWEI-G5WW3D_HiLink</code></li>
+  <li>代理设置: <code class="language-plaintext highlighter-rouge">手动</code></li>
+  <li>代理服务器和端口: <code class="language-plaintext highlighter-rouge">192.168.31.114</code> 和<code class="language-plaintext highlighter-rouge">6152</code></li>
+  <li>安全性类型: <code class="language-plaintext highlighter-rouge">WPA/WPA2 个人级</code></li>
+  <li>密码: <code class="language-plaintext highlighter-rouge">password1234</code></li>
+</ol>
+
+<p><img src="/assets/img/apple-tv-profile-step3.png" alt="Step 3" /></p>
+
+<p>打开菜单栏, 文件-存储, 来保存当前的配置文件。</p>
+
+<p><img src="/assets/img/apple-tv-profile-step4.png" alt="Step 4" /></p>
+
+<h2 id="连接apple-tv">连接Apple TV</h2>
+
+<p>请确保当前设备在同一个网络中, 我使用的是带网口的版本,可以直接连接网线。如果你是无网口的版本, 建议使用非上面配置中的已使用的Wi-Fi进行。也可以使用手机热点或者其他的Wi-Fi。</p>
+
+<p>进入Apple TV, 打开设置-遥控器与设备-“遥控器”App与设备。停留在此页面并等待配对连接。</p>
+
+<p>回到Apple Configurator, 打开菜单栏-配对的设备…</p>
+
+<p><img src="/assets/img/apple-tv-profile-step5.png" alt="Step 5" /></p>
+
+<p>选择附近的Apple TV 进行配对连接</p>
+
+<p><img src="/assets/img/apple-tv-profile-step6.png" alt="Step 6" /></p>
+
+<p>输入Apple TV 上的认证码进行连接</p>
+
+<p><img src="/assets/img/apple-tv-profile-step7.png" alt="Step 7" /></p>
+
+<p>配对连接成功</p>
+
+<p><img src="/assets/img/apple-tv-profile-step8.png" alt="Step 8" /></p>
+
+<p>关闭此窗口并回到首页</p>
+
+<p><img src="/assets/img/apple-tv-profile-step9.png" alt="Step 9" /></p>
+
+<p>点击首页的设备进入配置, 选择侧边栏-描述文件, 并拖入刚才保存的配置文件</p>
+
+<p><img src="/assets/img/apple-tv-profile-step10.png" alt="Step 10" /></p>
+
+<p>传输配置文件后并在TV 端安装配置文件后重启TV 即可, TV 会自动连接刚才配置的Wi-Fi 和代理。</p>]]></content><author><name></name></author><summary type="html"><![CDATA[最近新购入Apple TV, 需要配置代理服务使用Netflix 和Youtube 服务, 所以写下这篇文章记录我配置代理的过程和遇到的问题。]]></summary></entry><entry><title type="html">下载完整的macOS 系统镜像</title><link href="https://gezihuzi.github.io/2023/01/23/download-macos-image.html" rel="alternate" type="text/html" title="下载完整的macOS 系统镜像" /><published>2023-01-23T05:00:00+00:00</published><updated>2023-01-23T05:00:00+00:00</updated><id>https://gezihuzi.github.io/2023/01/23/download-macos-image</id><content type="html" xml:base="https://gezihuzi.github.io/2023/01/23/download-macos-image.html"><![CDATA[<p>最近为我的15 款的Mac 更换新的固态硬盘。需要备份系统以便更换完直接恢复。</p>
+
+<p>需要下载完整的<code class="language-plaintext highlighter-rouge">macOS</code> 系统镜像制作可引导的<code class="language-plaintext highlighter-rouge">macOS</code> 安装器。但是<code class="language-plaintext highlighter-rouge">App Store</code> 的下载速度过慢且十分的不稳定, 这里我们将使用<code class="language-plaintext highlighter-rouge">macOS</code> 自带的终端获取完整的<code class="language-plaintext highlighter-rouge">macOS</code> 系统镜像下载链接。</p>
+
+<blockquote>
+  <p>macOS 12.6.2
+终端 2.12.7
+Folx 5.27.1</p>
+</blockquote>
+
+<h2 id="监听系统安装日志">监听系统安装日志</h2>
+
+<p>我们通过终端执行以下命令, 监听系统下载和安装时的日志信息:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">tail</span> <span class="nt">-f</span> /var/log/install.log | <span class="nb">grep</span> .pkg
+</code></pre></div></div>
+
+<p>保持终端运行, 我们执行后续操作</p>
+
+<h2 id="获取并下载">获取并下载</h2>
+
+<p>这里以<code class="language-plaintext highlighter-rouge">macOS Monterey</code>为例, 在<code class="language-plaintext highlighter-rouge">App Store</code> 中搜索下载或者 直接<a href="https://apps.apple.com/cn/app/macos-monterey/id1576738294">下载macOS Monterey</a>进入并下载安装你需要下载的系统镜像。</p>
+
+<blockquote>
+  <p>苹果官方的<a href="https://support.apple.com/zh-cn/HT211683">如何下载 macOS</a>中提供了各个系统版本的App Store 链接</p>
+</blockquote>
+
+<p><img src="/assets/img/macos-monterey.png" alt="macOS Monterey" /></p>
+
+<p>点击「获取」后跳转至系统设置页面, 并弹窗提示是否需要下载当前的系统:</p>
+
+<p><img src="/assets/img/macos-download-alert.png" alt="macOS download alert" /></p>
+
+<p>点击下载后, 获取到下载信息后可以直接取消下载, 监听中的日志会显示我们当前获取到的下载信息:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>2023-01-23 14:27:14+08 MacBookPro15 softwareupdated[316]: Remaining packages to <span class="nb">install </span><span class="k">for </span>product 032-12843 : com.apple.pkg.InstallAssistant.macOSMonterey
+	        SUDistributionPackageURLString <span class="o">=</span> <span class="s2">"https://swdist.apple.com/content/downloads/55/35/032-12843-A_35UCTHBNLI/z1twfbx3mhypq6g7ljtz52z6nsv0n7e4o5/InstallAssistant.pkg"</span><span class="p">;</span>
+	        SUIntegrityDataURL <span class="o">=</span> <span class="s2">"https://swcdn.apple.com/content/downloads/55/35/032-12843-A_35UCTHBNLI/z1twfbx3mhypq6g7ljtz52z6nsv0n7e4o5/InstallAssistan.pkg.integrityDataV1"</span><span class="p">;</span>
+	    Identifier <span class="o">=</span> <span class="s2">"com.apple.pkg.InstallAssistant.macOSMonterey"</span><span class="p">;</span>
+	    URL <span class="o">=</span> <span class="s2">"https://swcdn.apple.com/content/downloads/55/35/032-12843-A_35UCTHBNLI/z1twfbx3mhypq6g7ljtz52z6nsv0n7e4o5/InstallAssistant.pkg"</span><span class="p">;</span>
+	<span class="o">}</span> IntegrityInformation:SUPackageIntegrityInformation<span class="o">(</span>0x7faee45ffdb0<span class="o">)</span>: URL:https://swcdn.apple.com/content/downloads/55/35/032-12843-A_35UCTHBNLI/z1twfbx3mhypq6g7ljtz52z6nsv0n7e4o5/InstallAssistant.pkg.integrityDataV1 Size:42656 Checksum:<span class="o">(</span>null<span class="o">)</span>
+	        PKDownloaderAdditionalReferenceOptionChunklistURL <span class="o">=</span> <span class="s2">"https://swcdn.apple.com/content/downloads/55/35/032-12843-A_35UCTHBNLI/z1twfbx3mhypq6g7ljtz52z6nsv0n7e4o5/InstallAssistant.pkg.integrityDataV1"</span><span class="p">;</span>
+	        SUDistributionPackageURLString <span class="o">=</span> <span class="s2">"https://swdist.apple.com/content/downloads/55/35/032-12843-A_35UCTHBNLI/z1twfbx3mhypq6g7ljtz52z6nsv0n7e4o5/InstallAssistant.pkg"</span><span class="p">;</span>
+	        SUIntegrityDataURL <span class="o">=</span> <span class="s2">"https://swcdn.apple.com/content/downloads/55/35/032-12843-A_35UCTHBNLI/z1twfbx3mhypq6g7ljtz52z6nsv0n7e4o5/InstallAssistan.pkg.integrityDataV1"</span><span class="p">;</span>
+	    Identifier <span class="o">=</span> <span class="s2">"com.apple.pkg.InstallAssistant.macOSMonterey"</span><span class="p">;</span>
+	    URL <span class="o">=</span> <span class="s2">"https://swcdn.apple.com/content/downloads/55/35/032-12843-A_35UCTHBNLI/z1twfbx3mhypq6g7ljtz52z6nsv0n7e4o5/InstallAssistant.pkg"</span><span class="p">;</span>
+	      destination path: /var/folders/zz/zyxvpxvq6csfxvn_n00000s0000068/C/com.apple.SoftwareUpdate/swcdn.apple.com/content/downloads/55/35/032-12843-A_35UCTHBNLI/z1twfbx3mhypq6g7ljtz52z6nsv0n7e4o5/InstallAssistant.pkg
+2023-01-23 14:27:14+08 MacBookPro15 softwareupdated[316]: 032-12843: Starting download of InstallAssistant.pkg <span class="o">(</span>Size:12395078361, HasIntegrityInformation:YES<span class="o">)</span> with URL https://swcdn.apple.com/content/downloads/55/35/032-12843-A_35UCTHBNLI/z1twfbx3mhypq6g7ljtz52z6nsv0n7e4o5/InstallAssistant.pkg
+</code></pre></div></div>
+
+<p>日志中包含的<code class="language-plaintext highlighter-rouge">URL=...</code> 部分就是我们需要的镜像下载链接, 直接通过<code class="language-plaintext highlighter-rouge">Folx</code> 进行下载:</p>
+
+<p><img src="/assets/img/macos-downloading.png" alt="macOS downloading" /></p>
+
+<h2 id="清理">清理</h2>
+
+<p>回到终端, <code class="language-plaintext highlighter-rouge">Ctrl + C</code> 结束当前的监听任务, 等待下载结束即可</p>]]></content><author><name></name></author><summary type="html"><![CDATA[最近为我的15 款的Mac 更换新的固态硬盘。需要备份系统以便更换完直接恢复。]]></summary></entry><entry><title type="html">使用rbenv 管理ruby 环境</title><link href="https://gezihuzi.github.io/2023/01/21/rbenv.html" rel="alternate" type="text/html" title="使用rbenv 管理ruby 环境" /><published>2023-01-21T13:00:00+00:00</published><updated>2023-01-21T13:00:00+00:00</updated><id>https://gezihuzi.github.io/2023/01/21/rbenv</id><content type="html" xml:base="https://gezihuzi.github.io/2023/01/21/rbenv.html"><![CDATA[<p>rbenv 可以便捷管理安装和使用各个版本的ruby, 只需要几行命令即可搞定</p>
+
+<h2 id="环境准备">环境准备</h2>
+
+<blockquote>
+  <p>macOS 12.6.2
+rbenv 1.2.0
+ruby 3.2.0</p>
+</blockquote>
+
+<p>使用<code class="language-plaintext highlighter-rouge">homebrew</code> 安装<code class="language-plaintext highlighter-rouge">rbenv</code>, 运行以下命令:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brew <span class="nb">install </span>rbenv ruby-build
+</code></pre></div></div>
+
+<p>在你的<code class="language-plaintext highlighter-rouge">shell</code> 中加载<code class="language-plaintext highlighter-rouge">rbenv</code>, 运行以下命令并根据提示操作:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>rbenv init
+</code></pre></div></div>
+
+<p>安装特定版本的 ruby, 运行以下命令:</p>
+
+<h2 id="安装">安装</h2>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 安装 ruby v3.2.0</span>
+rbenv <span class="nb">install </span>3.2.0 
+</code></pre></div></div>
+
+<p>设置当前使用的版本, 根据实际的需求选择:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 将v3.2.0 设置为全局使用</span>
+rbenv global 3.2.0
+
+<span class="c"># 同时还支持在特定工程下使用特定的版本</span>
+<span class="c"># 将v3.2.0 应用于my-ruby-project 工程中</span>
+<span class="nb">cd </span>my-ruby-project
+rbenv <span class="nb">local </span>3.2.0
+</code></pre></div></div>
+
+<h2 id="使用">使用</h2>
+
+<p>安装完成后重启终端并运行以下命令查看当前的<code class="language-plaintext highlighter-rouge">ruby</code> 版本信息:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ruby <span class="nt">-v</span>
+</code></pre></div></div>
+
+<p>运行后获得以下信息:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ruby 3.2.0 <span class="o">(</span>2022-12-25 revision a528908271<span class="o">)</span> <span class="o">[</span>x86_64-darwin21]
+</code></pre></div></div>]]></content><author><name></name></author><summary type="html"><![CDATA[rbenv 可以便捷管理安装和使用各个版本的ruby, 只需要几行命令即可搞定]]></summary></entry><entry><title type="html">使用jekyll 安装和部署博客</title><link href="https://gezihuzi.github.io/2023/01/09/setup-jekyll.html" rel="alternate" type="text/html" title="使用jekyll 安装和部署博客" /><published>2023-01-09T13:00:00+00:00</published><updated>2023-01-09T13:00:00+00:00</updated><id>https://gezihuzi.github.io/2023/01/09/setup-jekyll</id><content type="html" xml:base="https://gezihuzi.github.io/2023/01/09/setup-jekyll.html"><![CDATA[<p>使用jekyll 安装和部署博客, 和解决安装时遇到的问题</p>
+
+<h2 id="环境准备">环境准备</h2>
+
+<blockquote>
+  <p>macOS 12.6.2
+ruby 3.2.0</p>
+</blockquote>
+
+<p>安装jekyll 和相关的依赖需要使用<code class="language-plaintext highlighter-rouge">ruby</code>, <code class="language-plaintext highlighter-rouge">macOS</code> 系统自带的<code class="language-plaintext highlighter-rouge">ruby</code> 版本过低且使用非<code class="language-plaintext highlighter-rouge">root</code> 用户<code class="language-plaintext highlighter-rouge">gem</code> 无法安装第三方的依赖。使用<a href="https://github.com/rbenv/rbenv">rbenv</a> 来安装和管理<code class="language-plaintext highlighter-rouge">ruby</code> 环境。</p>
+
+<p>具体的安装和使用请参见<a href="/2023/01/21/rbenv">使用rbenv 管理ruby 环境</a></p>
+
+<p>安装完成后重启终端并运行以下命令查看当前的Ruby 版本信息:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ruby <span class="nt">-v</span>
+</code></pre></div></div>
+
+<p>运行后获得以下信息:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ruby 3.0.0p0 <span class="o">(</span>2020-12-25 revision 95aff21468<span class="o">)</span> <span class="o">[</span>x86_64-darwin21]
+</code></pre></div></div>
+
+<h2 id="安装jekyll">安装jekyll</h2>
+
+<p>前置的依赖环境已经安装完成, 接下来我们安装<code class="language-plaintext highlighter-rouge">jekyll</code>, <code class="language-plaintext highlighter-rouge">jekyll</code>可以帮助我们将<code class="language-plaintext highlighter-rouge">markdown</code> 等文件生成静态的<code class="language-plaintext highlighter-rouge">HTML</code> 文件供我们部署。并支持插件主题等更多特性, 具体的相关信息请参见<a href="https://jekyllrb.com/">jekyll 官网</a></p>
+
+<p>使用以下命令安装Bundler 和jekyll:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>gem <span class="nb">install </span>bundler jekyll
+</code></pre></div></div>
+
+<p>使用jekyll 创建一个名为的网站工程并切换至网站根目录:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>jekyll new my-awesome-site
+<span class="nb">cd </span>my-awesome-site
+</code></pre></div></div>
+
+<p>运行网站:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>bundle <span class="nb">exec </span>jekyll serve
+<span class="c"># 现在可以通过访问 http://localhost:4000 来查看网站信息</span>
+</code></pre></div></div>
+
+<h2 id="遇到的问题">遇到的问题</h2>
+
+<p>安装<code class="language-plaintext highlighter-rouge">jekyll</code> 的过程中, 安装和编译特定的依赖<code class="language-plaintext highlighter-rouge">eventmachine ****</code>时会报错, 大致的内容如下:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>make <span class="s2">"DESTDIR="</span>
+compiling binder.cpp
+In file included from binder.cpp:20:
+./project.h:119:10: fatal error: <span class="s1">'openssl/ssl.h'</span> file not found
+<span class="c">#include &lt;openssl/ssl.h&gt;</span>
+         ^~~~~~~~~~~~~~~
+1 error generated.
+make: <span class="k">***</span> <span class="o">[</span>binder.o] Error 1
+
+make failed, <span class="nb">exit </span>code 2
+
+Gem files will remain installed <span class="k">in</span> /Users/chen/.rvm/gems/ruby-3.0.0/gems/eventmachine-1.2.7 <span class="k">for </span>inspection.
+</code></pre></div></div>
+
+<p>从以上的错误信息中我们了解到, 代码引用了openssl 源码的内容, 但是编译的项目无法找到相关的头文件, 所以编译失败了。所以我们需要去解决这个问题。</p>
+
+<p>目前我使用的电脑是有安装LibreSSL 2.8.3 版本的依赖, 但是经过测试还是无法编译成功。所以我搜索Homebrew 查询openssl 相关的依赖:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brew search openssl
+</code></pre></div></div>
+
+<p>搜索的结果如下:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">==&gt;</span> Formulae
+glib-openssl                                             opensc
+openssl@1.1                                              open-sp
+openssl@3 ✔                                              openfst
+openslp                                                  opencsg
+openssh                                                  openmsx
+opensaml                                                 homebrew/portable-ruby/portable-openssl
+
+<span class="o">==&gt;</span> Casks
+openmsx
+</code></pre></div></div>
+
+<p>发现当前安装的版本是openssl@3 的版本, 可能因为当前安装的版本太高了, 整体的头文件信息已经发生不可调整的更改。所以我打算使用老版本的openssl@1.1 来尝试是否可行。运行一下命令安装openssl@1.1 依赖:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brew <span class="nb">install </span>openssl@1.1
+</code></pre></div></div>
+
+<p>使用命令获取当前已经安装的openssl@1.1 的路径:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brew <span class="nt">--prefix</span> openssl@1.1
+</code></pre></div></div>
+
+<p>获取的路径为:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>/opt/homebrew/opt/openssl@1.1
+</code></pre></div></div>
+
+<p>安装成功后使用以下的命令附加额外的–with-openssl-dir 参数并拼接获取的openssl@1.1 路径信息后重新安装eventmachine 依赖:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>gem <span class="nb">install </span>eventmachine <span class="nt">--</span> <span class="nt">--with-openssl-dir</span><span class="o">=</span>/opt/homebrew/opt/openssl@1.1
+</code></pre></div></div>
+
+<p>安装成功且未继续报错, 然后重新使用安装命令安装jekyll:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>gem <span class="nb">install </span>bundler jekyll
+</code></pre></div></div>
+
+<p>安装成功</p>]]></content><author><name></name></author><summary type="html"><![CDATA[使用jekyll 安装和部署博客, 和解决安装时遇到的问题]]></summary></entry></feed>
